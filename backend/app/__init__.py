@@ -1,7 +1,10 @@
 import os
 from flask import Flask
 from dotenv import load_dotenv
-from app.extensions import db, migrate, ma
+from app.extensions import db, migrate, ma, jwt
+from app.routes.cliente_routes import cliente_bp
+from app.routes.usuario_routes import usuario_bp
+from app.routes.auth_route import auth_bp
 
 
 def create_app():
@@ -9,7 +12,6 @@ def create_app():
 
     app = Flask(__name__)
 
-    # Configurações do Banco de Dados
     db_user = os.getenv('DB_USER')
     db_password = os.getenv('DB_PASSWORD')
     db_host = os.getenv('DB_HOST')
@@ -18,17 +20,16 @@ def create_app():
     
     app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
 
-    # Inicializa as extensões
+
     db.init_app(app)
     migrate.init_app(app, db)
     ma.init_app(app)
-
-    # Registra as rotas (Blueprints)
-    from app.routes.cliente_routes import cliente_bp
-    from app.routes.usuario_routes import usuario_bp
+    jwt.init_app(app)
 
     app.register_blueprint(cliente_bp, url_prefix='/api/clientes')
     app.register_blueprint(usuario_bp)
+    app.register_blueprint(auth_bp)
 
     return app

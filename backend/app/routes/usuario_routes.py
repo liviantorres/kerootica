@@ -11,3 +11,4 @@ usuario_bp = Blueprint(
 @usuario_bp.route("", methods=["POST"])
 def criar_usuario():
     return UsuarioController.criar()
+

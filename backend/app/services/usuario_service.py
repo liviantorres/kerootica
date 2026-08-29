@@ -1,6 +1,7 @@
 from app.services.auth_service import AuthService
 from app.models.usuario import Usuario
 from app.repositories.usuario_repository import UsuarioRepository
+from flask_jwt_extended import create_access_token
 
 class UsuarioService:
 
@@ -23,3 +24,30 @@ class UsuarioService:
         )
 
         return UsuarioRepository.criar(novo_usuario)
+
+    @staticmethod
+    def autenticar_usuario(email, senha):
+        usuario = UsuarioRepository.buscar_por_email(email)
+
+        if not usuario:
+            raise ValueError("Email inválido.")
+
+        if not usuario.status:
+              raise ValueError("Usuário inativo.")
+
+        senha_valida = AuthService.verificar_senha(
+              senha,
+              usuario.senha
+        )
+
+        if not senha_valida:
+              raise ValueError("Senha inválida.")
+
+        token = create_access_token(
+              identity=str(usuario.id),
+              additional_claims ={
+                    "perfil": usuario.perfil
+              }
+        )
+
+        return usuario, token
