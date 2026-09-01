@@ -46,5 +46,5 @@ class ReceitaOlho(db.Model):
 
     receita = db.relationship(
         "Receita",
-        backref="olhos"
+        back_populates="olhos"
     )

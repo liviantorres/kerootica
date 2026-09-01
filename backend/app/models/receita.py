@@ -19,12 +19,10 @@ class Receita(db.Model):
 
     optometrista = db.Column(
         db.String(60),
-        nullable=False
     )
 
     tipo_lente = db.Column(
-        db.String(25),
-        nullable=False
+        db.String(25), 
     )
 
     tratamento = db.Column(
@@ -59,6 +57,12 @@ class Receita(db.Model):
         db.DateTime,
         default=datetime.utcnow,
         nullable=False
+    )
+
+    olhos = db.relationship(
+        "ReceitaOlho",
+        back_populates="receita",
+        cascade="all, delete-orphan"
     )
 
     cliente = db.relationship(
