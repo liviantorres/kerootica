@@ -1,6 +1,6 @@
 from app.extensions import db
 
-class Receitaolho(db.Model):
+class ReceitaOlho(db.Model):
 
     __tablename__ = "receitas_olhos"
 
