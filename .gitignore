@@ -1,0 +1,10 @@
+venv/
+.env
+__pycache__/
+*.py[cod]
+# Ignore node_modules
+node_modules/
+
+# Ignore python venv
+.venv/
+__pycache__/

@@ -10,6 +10,7 @@ from app.routes.auth_route import auth_bp
 from flasgger import Swagger
 
 
+
 def create_app():
     load_dotenv()
 
