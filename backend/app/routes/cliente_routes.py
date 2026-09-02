@@ -1,7 +1,8 @@
 from flask import Blueprint
 from flask_jwt_extended import jwt_required
 from app.controllers.cliente_controller import ClienteController
-
+from flasgger import swag_from
+import os
 
 cliente_bp = Blueprint(
     "clientes",
@@ -9,9 +10,13 @@ cliente_bp = Blueprint(
     url_prefix="/api/clientes"
 )
 
+diretorio_atual = os.path.dirname(os.path.abspath(__file__))
+caminho_docs = os.path.join(diretorio_atual, '../docs/clientes/criar_cliente.yml')
+
 
 @cliente_bp.route("", methods=["POST"])
 @jwt_required()
+@swag_from(caminho_docs)
 def criar_cliente():
     return ClienteController.criar()
 

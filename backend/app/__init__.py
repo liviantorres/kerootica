@@ -7,6 +7,7 @@ from app.extensions import db, migrate, ma, jwt
 from app.routes.cliente_routes import cliente_bp
 from app.routes.usuario_routes import usuario_bp
 from app.routes.auth_route import auth_bp
+from flasgger import Swagger
 
 
 def create_app():
@@ -40,6 +41,7 @@ def create_app():
     # =========================
     # Inicialização
     # =========================
+    Swagger(app)
 
     db.init_app(app)
     migrate.init_app(app, db)

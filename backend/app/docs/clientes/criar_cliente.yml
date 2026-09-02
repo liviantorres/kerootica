@@ -1,0 +1,61 @@
+tags:
+  - Clientes
+summary: Cadastra um novo cliente no sistema
+description: Rota para criar um cliente recebendo os dados via JSON no corpo da requisição.
+consumes:
+  - application/json
+parameters:
+  - in: header
+    name: Authorization
+    description: Token JWT de autenticação (Formato esperto "Bearer <seu_token>")
+    required: true
+    type: string
+
+  - in: body
+    name: body
+    description: Objeto contendo os dados do novo cliente
+    required: true
+    schema:
+      type: object
+      required:
+        - nome_completo
+        - cpf
+      properties:
+        nome_completo:
+          type: string
+          example: "Maria das Graças"
+        cpf:
+          type: string
+          example: "12345678900"
+          description: "O CPF do cliente. Deve conter exatamente 11 dígitos numéricos."
+          minLength: 11
+          maxLength: 14  
+        numero_ficha:
+          type: string
+          example: "1050"
+        telefone1:
+          type: string
+          example: "(88) 99999-1234"
+        telefone2:
+          type: string
+          example: "(88) 98888-5678"
+        nome_mae:
+          type: string
+          example: "Ana Maria"
+        nome_pai:
+          type: string
+          example: "José Carlos"
+        referencia:
+          type: string
+          example: "Casa amarela próximo ao mercadinho"
+        email:
+          type: string
+          example: "maria@email.com"
+        endereco:
+          type: string
+          example: "Rua Principal, 123 - Centro"
+responses:
+  201:
+    description: Cliente criado com sucesso
+  400:
+    description: Erro de validação (exemplo - CPF ou Número de Ficha já cadastrados)
