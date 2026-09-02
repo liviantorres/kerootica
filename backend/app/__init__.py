@@ -9,6 +9,7 @@ from app.routes.usuario_routes import usuario_bp
 from app.routes.auth_route import auth_bp
 
 
+
 def create_app():
     load_dotenv()
 

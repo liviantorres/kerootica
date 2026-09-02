@@ -11,3 +11,8 @@ auth_bp = Blueprint(
 @auth_bp.route("/login", methods=["POST"])
 def login():
     return AuthController.login()
+    
+
+@auth_bp.route("/teste", methods=["GET"])
+def teste():
+    return "Everton lindo"
