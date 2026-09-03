@@ -1,0 +1,13 @@
+.input-container {
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.input-field {
+  padding: 8px;
+  margin-top: 4px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}

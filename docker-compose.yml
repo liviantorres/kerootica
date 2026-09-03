@@ -1,9 +1,26 @@
 version: '3.8'
 
 services:
+  # 1. O Banco de Dados
+  db:
+    image: postgres:15-alpine
+    container_name: postgres_kerootica
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  # 2. A sua API
   backend:
     build: ./backend
     container_name: backend_kerootica
+    depends_on:
+      - db
     ports:
       - "5000:5000"
     volumes:
@@ -15,4 +32,24 @@ services:
     environment:
       - FLASK_APP=run.py
       - FLASK_DEBUG=1
-      - DB_HOST=host.docker.internal
+      # Conecta ao nome do serviço do banco acima, e não mais ao localhost
+      - DB_HOST=db 
+
+  # 3. O seu React
+  frontend:
+    build: ./frontend
+    container_name: frontend_kerootica
+    depends_on:
+      - backend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      # Evita que o node_modules do seu Windows/Mac sobrescreva o do container
+      - /app/node_modules 
+    environment:
+      - VITE_API_URL=http://localhost:5000
+
+# Volume para os dados do banco não sumirem quando desligar o PC
+volumes:
+  pgdata:
