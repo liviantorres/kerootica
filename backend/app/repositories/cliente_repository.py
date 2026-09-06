@@ -25,7 +25,7 @@ class ClienteRepository:
         ).all()
 
     @staticmethod
-    def criar(cliente):
+    def salvar(cliente):
         db.session.add(cliente)
         db.session.commit()
         return cliente

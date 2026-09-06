@@ -33,7 +33,7 @@ class ClienteService:
             endereco=dados.get("endereco")
         )
 
-        return ClienteRepository.criar(cliente)
+        return ClienteRepository.salvar(cliente)
 
     @staticmethod
     def buscar_cliente(cliente_id):

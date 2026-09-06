@@ -3,7 +3,7 @@ from marshmallow import Schema, fields, validate
 class ReceitaOlhoSchema(Schema):
 
     id = fields.Int(dump_only=True)
-    receita_id = fields.Int(required=True, allow_none=False)
+    receita_id = fields.Int(dump_only=True)
 
     olho = fields.Str(
         required = True,

@@ -4,7 +4,7 @@ from app.models.receita import Receita
 class ReceitaRepository:
 
     @staticmethod
-    def criar(receita):
+    def salvar(receita):
         db.session.add(receita)
         db.session.commit()
         return receita
@@ -23,7 +23,7 @@ class ReceitaRepository:
         return db.session.get(Receita, receita_id)
 
     @staticmethod
-    def listar_por_cliente(cliente_id):
+    def buscar_por_cliente(cliente_id):
         return Receita.query.filter_by(cliente_id=cliente_id).all()
 
     @staticmethod
