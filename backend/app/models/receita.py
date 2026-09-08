@@ -66,7 +66,12 @@ class Receita(db.Model):
     )
 
     cliente = db.relationship(
-            "Cliente",
-            backref="receitas"
-        )
+        "Cliente",
+        backref="receitas"
+    )
+
+    vendas = db.relationship(
+        "Venda",
+        back_populates="receita"
+    )
     

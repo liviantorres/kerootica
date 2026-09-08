@@ -43,3 +43,8 @@ class Cliente(db.Model):
         default=datetime.utcnow,
         nullable=False
     )
+
+    vendas = db.relationship(
+        "Venda",
+        back_populates="cliente"
+    )
