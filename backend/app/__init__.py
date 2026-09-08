@@ -8,6 +8,7 @@ from app.routes.cliente_routes import cliente_bp
 from app.routes.usuario_routes import usuario_bp
 from app.routes.auth_route import auth_bp
 from app.routes.receita_route import receita_bp
+from app.routes.venda_route import venda_bp
 from flasgger import Swagger
 
 
@@ -58,5 +59,6 @@ def create_app():
     app.register_blueprint(usuario_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(receita_bp)
+    app.register_blueprint(venda_bp)
 
     return app
