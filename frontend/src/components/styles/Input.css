@@ -1,13 +1,44 @@
 .input-container {
-  margin-bottom: 10px;
+  margin-bottom: 1rem;
   display: flex;
   flex-direction: column;
 }
 
+.input-container label {
+  color: #0A2846;
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+  text-align: left;
+}
+
+.input-wrapper {
+  display: flex;
+  align-items: center;
+  border: 1px solid #CBE0F5;
+  border-radius: 6px;
+  padding: 0.6rem;
+  background-color: white;
+}
+
+.input-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 0.5rem;
+  color: #0A2846;
+}
+
 .input-field {
-  padding: 8px;
-  margin-top: 4px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 16px;
+  flex: 1;
+  border: none !important;
+  outline: none !important;
+  background: transparent !important;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.input-field::placeholder {
+  color: #999;
+  font-style: italic;
 }
