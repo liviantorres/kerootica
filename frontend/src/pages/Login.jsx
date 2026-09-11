@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from '../components/Button.jsx';
 import { Input } from '../components/Input.jsx';
-import logo from '../assets/images/logo.png';
+import logo from '../assets/images/logo.svg';
 import userIcon from '../assets/icons/user.svg';
 import lockIcon from '../assets/icons/pass.svg';
 import '../pages/styles/Login.css';

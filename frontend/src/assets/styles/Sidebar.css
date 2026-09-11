@@ -1,0 +1,121 @@
+/* Transição e estrutura base da Sidebar */
+.sidebar {
+    background-color: #FFFFFF; /* Fundo branco conforme a sua imagem de referência */
+    padding: 2rem 0; /* Padding lateral zerado para a marcação amarela encostar na borda */
+    display: flex;
+    flex-direction: column;
+    height: 100%; 
+    transition: width 0.3s ease;
+    border-right: 1px solid #E0E0E0; /* Linha divisória sutil para separar do conteúdo */
+}
+
+/* Estados de largura da Sidebar */
+.sidebar.open {
+    width: 250px;
+}
+
+.sidebar.closed {
+    width: 80px; 
+    align-items: center;
+}
+
+/* Estrutura da navegação interna */
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0;
+}
+
+/* =========================================
+   ESTILOS DOS BOTÕES (ATIVO E INATIVO)
+========================================= */
+
+/* Estilo Padrão (Não Clicado - Fino e Azul Escuro) */
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #1E3A5F;
+    text-decoration: none;
+    padding: 12px 20px; /* Mais espaço interno */
+    font-weight: 400;
+    transition: all 0.2s ease-in-out;
+    width: 100%;
+    box-sizing: border-box; /* Impede que o padding quebre a largura */
+    border-right: 4px solid transparent;
+}
+
+.nav-item:hover {
+    background-color: #f0f4f8; /* Leve fundo acinzentado ao passar o mouse */
+}
+
+/* Estilo Ativo (Selecionado - Negrito, Fundo Azul e Barra Amarela) */
+.nav-item.active {
+    background-color: #215BA6;
+    color: #FFFFFF;
+    font-weight: 600; /* Letra em negrito */
+    border-right: 4px solid #F2C94C; /* Barra amarela na lateral direita */
+}
+
+/* Força os ícones a terem a mesma cor do texto em que estão inseridos (caso sejam SVGs inline ou fontes) */
+.nav-item.active .nav-icon {
+    filter: brightness(0) invert(1); /* Truque rápido para deixar o ícone SVG branco quando ativo */
+}
+
+.nav-icon {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    flex-shrink: 0; /* Impede que o ícone seja esmagado */
+}
+
+/* Esconde o texto suavemente quando fechado */
+.nav-text {
+    white-space: nowrap;
+}
+
+/* =========================================
+   CONFIGURAÇÃO DO BOTÃO E ANIMAÇÃO DO ÓCULOS
+========================================= */
+
+/* Base do botão invisível */
+.toggle-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-bottom: 2rem;
+    display: flex;
+    width: 100%; 
+}
+
+/* Quando ABERTO: Óculos na margem direita */
+.sidebar.open .toggle-btn {
+    justify-content: flex-end; 
+    padding-right: 15px; 
+}
+
+/* Quando FECHADO: Óculos no centro */
+.sidebar.closed .toggle-btn {
+    justify-content: center; 
+    padding-right: 0; 
+}
+
+/* Tamanho e tempo de animação do ícone */
+.oculos-deitado, .oculos-em-pe {
+    width: 30px;
+    transition: transform 0.3s ease;
+}
+
+/* Rotações */
+.oculos-deitado {
+    transform: rotate(0deg); 
+}
+
+.oculos-em-pe {
+    transform: rotate(90deg); 
+}

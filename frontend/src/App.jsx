@@ -1,7 +1,11 @@
-import { BrowserRouter, Routes, Route, Navigate} from 'react-router-dom';
-import ProtectedRoute from './components/ProtectedRoute';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './pages/Login';
 import Home from './pages/Home';
+import Clientes from './pages/Clientes';
+import Caixa from './pages/Caixa';
+import Relatorios from './pages/Relatorios';
+import ProtectedRoute from './components/ProtectedRoute';
+import { MainLayout } from './components/MainLayout';
 
 function App() {
   return (
@@ -9,16 +13,20 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
 
-        {/* Rota protegida: só acessível se o usuário estiver logado (token presente) */}
+        {/* Adicione o MainLayout envolvendo a Home */}
         <Route element={<ProtectedRoute />}>
-          <Route path="/home" element={<Home />} />
+          <Route element={<MainLayout />}>
+            <Route path="/home" element={<Home />} />
+            <Route path="/clientes" element={<Clientes />} />
+            <Route path="/caixa" element={<Caixa />} />
+            <Route path="/relatorios" element={<Relatorios />} />
+          </Route>
         </Route>
 
-        {/* Redireciona qualquer rota desconhecida para a página de login */}
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </BrowserRouter>
-  )
+  );
 }
 
-export default App
+export default App;

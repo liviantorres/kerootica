@@ -1,0 +1,82 @@
+/* O contêiner pai tira margens internas para que as cores encostem nas bordas */
+.app-header {
+    display: flex;
+    height: 80px;
+    width: 100%;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    z-index: 10;
+}
+
+/* O lado da logo: Fundo azul escuro e largura fixa para alinhar com o futuro menu */
+.header-left-blue {
+    width: 450px;
+    background-color: #0B2B46;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* O restante da barra: Fundo branco, ocupando todo o espaço que sobrou (flex: 1) */
+.header-right-white {
+    flex: 1;
+    background-color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    padding: 0 2rem;
+    color: #333;
+}
+
+.logo-img {
+    width: 300px;
+    height: auto;
+    margin-top: 10px;
+}
+
+/* Atualize o contêiner branco para separar o título do perfil */
+.header-right-white {
+    flex: 1;
+    background-color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Essa é a mágica que afasta os itens */
+    padding: 0 2rem;
+    color: #1E293B;
+}
+
+/* Alinhamento da área do usuário */
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 12px; /* Cria o espaço entre a bolinha e o texto */
+    cursor: pointer;
+    margin-right: 50px;
+}
+
+/* Bolinha do Avatar */
+.avatar-placeholder {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #0B2B46;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+}
+
+/* Empilha o nome e o cargo */
+.user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.user-name {
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.user-role {
+    font-size: 0.75rem;
+    color: #64748B;
+}
