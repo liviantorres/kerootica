@@ -1,0 +1,273 @@
+.page-container {
+    color: #F1F8FF;
+    display: flex;
+    flex-direction: column;
+    gap: 32px; /* Espaço entre o topo e a futura tabela */
+}
+
+/* Títulos */
+.page-titles h2 {
+    font-size: 2rem;
+    color: #1A202C;
+    margin-bottom: 4px;
+}
+
+.page-titles p {
+    color: #64748B;
+    font-size: 1rem;
+}
+
+/* Barra principal alinhada */
+.action-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    width: 100%;
+}
+
+/* Campo de busca dinâmico */
+.search-input {
+    flex: 1; 
+    height: 42px; /* Altura exata travada */
+    margin: 0; /* Remove margens invisíveis padrão do navegador */
+    padding: 0 16px; /* Padding apenas nas laterais */
+    border: 1px solid #CBD5E1;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    outline: none;
+    transition: all 0.2s;
+    box-sizing: border-box; /* Garante que a borda não aumente o tamanho */
+}
+
+.search-input:focus {
+    border-color: #215BA6;
+    box-shadow: 0 0 0 3px rgba(33, 91, 166, 0.1);
+}
+
+/* Contêiner dos botões */
+.action-buttons {
+    display: flex;
+    align-items: center; 
+    gap: 12px;
+    flex-shrink: 0; 
+}
+
+/* Base compartilhada dos botões */
+.btn-secondary, .btn-primary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px; /* Espaço entre o ícone e o texto */
+    height: 42px;
+    padding: 0 18px; /* Ajuste na largura interna para ficar proporcional à imagem */
+    border-radius: 8px; /* Arredondamento exato da referência */
+    font-weight: 500;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-family: inherit;
+    line-height: 1;
+    margin: 0;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+    border: none; /* Remove a borda padrão do navegador */
+}
+
+/* Ícones dos botões */
+.icon {
+    width: 20px;
+    height: 20px;
+    display: block;
+    object-fit: contain;
+}
+
+/* =========================================
+   Botão "Filtros" (Secundário)
+========================================= */
+.btn-secondary {
+    background-color: #FFFFFF;
+    border: 1px solid #CBD5E1; /* Borda sutil */
+    color: #1E3A5F; /* Azul bem escuro, substituindo o cinza anterior */
+}
+
+.btn-secondary:hover {
+    background-color: #F1F5F9;
+    border-color: #94A3B8; /* Escurece a borda levemente ao passar o mouse */
+}
+
+/* =========================================
+   Botão "Novo Cliente" (Primário)
+========================================= */
+.btn-primary {
+    background-color: #215BA6; /* Azul base do seu projeto */
+    color: #FFFFFF;
+    border: 1px solid transparent; /* Garante o mesmo box-model do botão secundário */
+}
+
+.btn-primary:hover {
+    background-color: #174276; /* Tom mais escuro para o clique */
+}
+
+/* =========================================
+   Container da Tabela
+======================================== */
+.table-container {
+    background-color: #FFFFFF;
+    border: 1px solid #CBD5E1;
+    border-radius: 8px;
+    padding: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Tabela Base */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.data-table th, .data-table td {
+    padding: 16px 24px;
+    font-size: 0.95rem;
+}
+
+/* Cabeçalho */
+.data-table th {
+    color: #215BA6; /* Azul base */
+    font-weight: 600;
+    border-bottom: 1px solid #CBD5E1;
+    background-color: #FFFFFF;
+}
+
+/* Linhas */
+.data-table td {
+    color: #1E293B; /* Texto escuro */
+    border-bottom: 1px solid #E2E8F0;
+    vertical-align: middle;
+}
+
+.data-table tr:last-child td {
+    border-bottom: none; /* Remove border from last row before footer */
+}
+
+/* Hover na linha */
+.data-table tbody tr:hover {
+    background-color: #F8FAFC;
+}
+
+/* Estado vazio */
+.empty-state {
+    text-align: center;
+    color: #64748B;
+    padding: 48px !important;
+}
+
+/* =========================================
+   Badges (Situação)
+======================================== */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    border-radius: 9999px; /* Pill shape */
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.badge-empty {
+    color: #64748B;
+}
+
+.badge-atrasada {
+    background-color: #FEE2E2; /* Fundo vermelho claro */
+    color: #991B1B; /* Texto vermelho escuro */
+}
+
+.badge-regular {
+    background-color: #DCFCE7; /* Fundo verde claro */
+    color: #166534; /* Texto verde escuro */
+}
+
+.badge-garantia {
+    background-color: #FEF3C7; /* Fundo amarelo claro */
+    color: #92400E; /* Texto amarelo escuro */
+}
+
+/* =========================================
+   Célula de Ações
+======================================== */
+.action-cell {
+    text-align: center;
+}
+
+.btn-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+}
+
+.btn-icon:hover {
+    background-color: #E2E8F0;
+}
+
+.action-arrow {
+    width: 20px;
+    height: 20px;
+    opacity: 0.8;
+}
+
+.data-table tbody tr:hover .action-arrow {
+    opacity: 1;
+}
+
+/* =========================================
+   Rodapé da tabela (Paginação)
+======================================== */
+.table-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    border-top: 1px solid #CBD5E1;
+    background-color: #FFFFFF;
+}
+
+.pagination-info {
+    color: #64748B;
+    font-size: 0.9rem;
+}
+
+.pagination-controls {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.btn-page {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.btn-page:hover:not(:disabled) {
+    opacity: 1;
+}
+
+.btn-page:disabled {
+    cursor: not-allowed;
+    opacity: 0.3;
+}

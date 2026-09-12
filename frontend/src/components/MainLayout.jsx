@@ -10,7 +10,8 @@ export function MainLayout() {
     const pageTitles = {
         '/home': 'Página Inicial',
         '/clientes': 'Gestão de Clientes',
-        '/produtos': 'Catálogo de Produtos'
+        '/caixa': 'Gestão de Caixa',
+        '/relatorios': 'Relatórios'
     };
     
     const currentTitle = pageTitles[location.pathname] || 'Página Inicial';

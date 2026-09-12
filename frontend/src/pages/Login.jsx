@@ -41,7 +41,7 @@ export default function Login() {
             // Redireciona para a home mapeada no App.jsx
             navigate('/home'); 
         } catch (erro) {
-            setError('Credenciais inválidas ou erro no servidor.');
+            setError('Credenciais inválidas.');
         } finally {
             setLoading(false);
         }
@@ -86,6 +86,8 @@ export default function Login() {
                             />
 
                             <a href="#" className="forgot-password">Esqueceu sua senha?</a>
+
+                            {error && <p className="error-message">{error}</p>}
                             
                             <Button type="submit" disabled={loading}>
                                 {loading ? 'Entrando...' : 'Entrar'}

@@ -1,7 +1,16 @@
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom'; // Troque Link por NavLink
 import oculosIcon from '../assets/icons/oculos.svg';
+
 import casaBranca from '../assets/icons/casa_branca.svg';
+import casaAzul from '../assets/icons/casa_azul.svg';
+import clienteBranca from '../assets/icons/cliente_branco.svg';
+import clienteAzul from '../assets/icons/cliente_azul.svg';
+import caixaBranca from '../assets/icons/caixa_branca.svg';
+import caixaAzul from '../assets/icons/caixa_azul.svg';
+import relatorioBranco from '../assets/icons/relatorio_branco.svg';
+import relatorioAzul from '../assets/icons/relatorio_azul.svg';
+
 import '../assets/styles/sidebar.css'; 
 
 export function Sidebar() {
@@ -18,26 +27,60 @@ export function Sidebar() {
             </button>
 
             <nav className="sidebar-nav">
-                {/* O NavLink recebe uma função para injetar a classe "active" quando clicado */}
+                
                 <NavLink to="/home" className={({ isActive }) => isActive ? "nav-item active" : "nav-item"}>
-                    <img src={casaBranca} alt="Início" className="nav-icon" />
-                    {isOpen && <span className="nav-text">Página Inicial</span>}
+                    {({ isActive }) => (
+                        <>
+                            <img 
+                                src={isActive ? casaBranca : casaAzul} 
+                                alt="Início" 
+                                className="nav-icon" 
+                            />
+                            {isOpen && <span className="nav-text">Página Inicial</span>}
+                        </>
+                    )}
                 </NavLink>
 
                 <NavLink to="/clientes" className={({ isActive }) => isActive ? "nav-item active" : "nav-item"}>
-                    <span className="nav-icon">👥</span>
-                    {isOpen && <span className="nav-text">Clientes</span>}
+                    {({ isActive }) => (
+                        <>
+                            <img 
+                                src={isActive ? clienteBranca : clienteAzul} 
+                                alt="Clientes" 
+                                className="nav-icon" 
+                            />
+                            {isOpen && <span className="nav-text">Clientes</span>}
+                        </>
+                    )}
                 </NavLink>
 
                 <NavLink to="/caixa" className={({ isActive }) => isActive ? "nav-item active" : "nav-item"}>
-                    <span className="nav-icon">📦</span>
-                    {isOpen && <span className="nav-text">Caixa</span>}
+                    {({ isActive }) => (
+                        <>
+                            <img 
+                                src={isActive ? caixaBranca : caixaAzul} 
+                                alt="Caixa" 
+                                className="nav-icon" 
+                            />
+                            {isOpen && <span className="nav-text">Caixa</span>}
+                        </>
+                    )}
                 </NavLink>
 
                 <NavLink to="/relatorios" className={({ isActive }) => isActive ? "nav-item active" : "nav-item"}>
-                    <span className="nav-icon">📊</span>
-                    {isOpen && <span className="nav-text">Relatórios</span>}
+                    {({ isActive }) => (
+                        <>
+                            <img 
+                                src={isActive ? relatorioBranco : relatorioAzul} 
+                                alt="Relatórios" 
+                                className="nav-icon" 
+                            />
+                            {isOpen && <span className="nav-text">Relatórios</span>}
+                        </>
+                    )}
                 </NavLink>
+
+                
             </nav>
         </aside>
     );

@@ -17,11 +17,10 @@ body, html {
     background-color: #DCE8F4; /* Fundo claro da tela */
 }
 
-/* O "cartão" principal flutuante que contém tudo */
 .login-wrapper {
     display: flex;
     width: 100%;
-    max-width: 900px; /* Limita a largura total */
+    max-width: 900px; 
     height: 550px;
     background-color: white;
     border-radius: 16px;
@@ -29,7 +28,6 @@ body, html {
     box-shadow: 0 12px 36px rgba(0, 0, 0, 0.1); /* Sombra elegante */
 }
 
-/* Painel azul escuro (metade esquerda) */
 .login-banner {
     flex: 1;
     background-color: #0A2846; 
@@ -134,4 +132,17 @@ body, html {
 
 .login-card button:hover {
     background-color: #082034;
+}
+
+.error-message {
+    background-color: #fee2e2; 
+    color: #dc2626; 
+    border: 1px solid #fca5a5; 
+    padding: 12px;
+    margin-bottom: 20px;
+    border-radius: 6px;
+    font-size: 0.85rem; 
+    text-align: center;
+    width: 100%;
+    box-sizing: border-box;
 }
