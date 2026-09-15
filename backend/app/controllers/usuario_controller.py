@@ -4,6 +4,7 @@ from flask import request, jsonify
 from marshmallow import ValidationError
 
 usuario_schema = UsuarioSchema()
+usuarios_schema = UsuarioSchema(many=True)
 
 class UsuarioController:
 
@@ -20,3 +21,40 @@ class UsuarioController:
 
         except ValueError as err:
             return jsonify({"erro": str(err)}), 422
+
+    @staticmethod
+    def listar():
+        usuarios = UsuarioService.listar_usuarios()
+        
+        return jsonify(
+            usuarios_schema.dump(usuarios)
+        ), 200
+            
+
+    @staticmethod
+    def atualizar(usuario_id):
+        try:
+            dados_validados = usuario_schema.load(
+                request.json,
+                partial=True
+            )
+
+            usuario = UsuarioService.atualizar_usuario(
+                usuario_id,
+                dados_validados
+            )
+
+            return jsonify(
+                usuario_schema.dump(usuario)
+            ), 200
+
+        except ValidationError as err:
+            return jsonify({
+                "erro": "Dados inválidos",
+                "detalhes": err.messages
+            }), 400
+
+        except ValueError as err:
+            return jsonify({
+                "erro": str(err)
+            }), 422   

@@ -26,6 +26,25 @@ class UsuarioService:
         return UsuarioRepository.criar(novo_usuario)
 
     @staticmethod
+    def atualizar_usuario(usuario_id, dados):
+
+      usuario = UsuarioRepository.buscar_por_id(usuario_id)
+
+      if not usuario:
+           raise ValueError("Esse usuário não existe.")
+
+      if "senha" in dados:
+        dados["senha"] = AuthService.gerar_hash_senha(
+            dados["senha"]
+        )
+
+      for campo, valor in dados.items():
+                  setattr(usuario, campo, valor)
+
+      return UsuarioRepository.atualizar(usuario)
+    
+
+    @staticmethod
     def autenticar_usuario(email, senha):
         usuario = UsuarioRepository.buscar_por_email(email)
 
@@ -51,3 +70,9 @@ class UsuarioService:
         )
 
         return usuario, token
+
+
+    @staticmethod
+    def listar_usuarios():
+        usuarios = UsuarioRepository.listar_todos()
+        return usuarios

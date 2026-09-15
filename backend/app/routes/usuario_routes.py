@@ -14,6 +14,15 @@ usuario_bp = Blueprint(
 def criar_usuario():
     return UsuarioController.criar()
 
+@usuario_bp.route("/<int:usuario_id>", methods=["PATCH"])
+def atualizar_usuario():
+    return UsuarioController.atualizar()
+
+@usuario_bp.route("", methods=["GET"])
+@admin_required
+def listar_usuarios():
+    return UsuarioController.listar()
+
 @usuario_bp.route("/admin", methods=["GET"])
 @admin_required
 def area_admin():
