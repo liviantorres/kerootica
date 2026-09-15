@@ -5,9 +5,9 @@ from app.repositories.venda_repository import VendaRepository
 class VendaService:
 
     @staticmethod
-    def criar_venda(numero_talao, dados):
+    def criar_venda(dados):
         numero_talao_existe = VendaRepository.buscar_por_numero_talao(
-            numero_talao
+            dados["numero_talao"]
         )
 
         if numero_talao_existe:

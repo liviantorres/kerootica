@@ -101,3 +101,8 @@ class Venda(db.Model):
         "Receita",
         back_populates="vendas"
     )
+
+    parcelas = db.relationship(
+        "Parcela",
+        back_populates="venda"
+    )
