@@ -1,6 +1,7 @@
 from flask import request, jsonify
 from marshmallow import ValidationError
 
+from app.extensions import db
 from app.schemas.cliente_schema import ClienteSchema
 from app.services.cliente_service import ClienteService
 
@@ -32,6 +33,13 @@ class ClienteController:
             return jsonify({
                 "erro": str(err)
             }), 409
+
+        except Exception as err:
+            db.session.rollback()
+            return jsonify({
+                "erro": "Erro interno ao criar cliente.",
+                "detalhes": str(err)
+            }), 500
 
     @staticmethod
     def listar():
@@ -90,6 +98,13 @@ class ClienteController:
                 "erro": mensagem
             }), 409
 
+        except Exception as err:
+            db.session.rollback()
+            return jsonify({
+                "erro": "Erro interno ao atualizar cliente.",
+                "detalhes": str(err)
+            }), 500
+
     @staticmethod
     def deletar(cliente_id):
         try:
@@ -103,3 +118,10 @@ class ClienteController:
             return jsonify({
                 "erro": str(err)
             }), 404
+
+        except Exception as err:
+            db.session.rollback()
+            return jsonify({
+                "erro": "Erro interno ao excluir cliente.",
+                "detalhes": str(err)
+            }), 500

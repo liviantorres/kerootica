@@ -1,6 +1,7 @@
 from app.extensions import db
 from app.models.receita import Receita
 
+
 class ReceitaRepository:
 
     @staticmethod
@@ -16,7 +17,7 @@ class ReceitaRepository:
 
     @staticmethod
     def listar():
-        return Receita.query.all()
+        return Receita.query.order_by(Receita.data_receita.desc(), Receita.id.desc()).all()
 
     @staticmethod
     def buscar_por_id(receita_id):
@@ -24,7 +25,12 @@ class ReceitaRepository:
 
     @staticmethod
     def buscar_por_cliente(cliente_id):
-        return Receita.query.filter_by(cliente_id=cliente_id).all()
+        return (
+            Receita.query
+            .filter_by(cliente_id=cliente_id)
+            .order_by(Receita.data_receita.desc(), Receita.id.desc())
+            .all()
+        )
 
     @staticmethod
     def deletar(receita):

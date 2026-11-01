@@ -11,6 +11,14 @@ CORS(app)
 
 def inicializar_banco_e_admin():
     db.create_all()
+    try:
+        db.session.execute(db.text("ALTER TYPE forma_pagamento ADD VALUE IF NOT EXISTS 'Promissória'"))
+        db.session.execute(db.text("ALTER TABLE vendas ADD COLUMN IF NOT EXISTS optometrista VARCHAR(60)"))
+        db.session.execute(db.text("ALTER TABLE vendas ADD COLUMN IF NOT EXISTS custo_armacao NUMERIC(10, 2)"))
+        db.session.execute(db.text("ALTER TABLE vendas ADD COLUMN IF NOT EXISTS custo_lentes NUMERIC(10, 2)"))
+        db.session.commit()
+    except Exception:
+        db.session.rollback()
 
     admin_nome = os.getenv("ADMIN_NOME", "Administrador")
     admin_email = os.getenv("ADMIN_EMAIL", "admin@kerootica.com")

@@ -1,7 +1,12 @@
 .vendas-container {
+    display: flex;
+    flex-direction: column;
     gap: 20px;
     width: 100%;
+    max-width: 100%;
+    min-width: 0;
     padding-bottom: 24px;
+    box-sizing: border-box;
 }
 
 /* Topo com título e indicador de etapas (Stepper) */
@@ -11,8 +16,189 @@
     align-items: center;
     flex-wrap: wrap;
     gap: 16px;
+    width: 100%;
 }
 
+.btn-voltar-vendas {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: none;
+    border: none;
+    padding: 0;
+    margin-bottom: 6px;
+    color: #5A87B2;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.btn-voltar-vendas:hover {
+    color: #215BA6;
+}
+
+/* =========================================
+   PAINEL DE VENDAS: 4 Cards de Resumo (KPIs)
+========================================= */
+.vendas-kpis-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+    width: 100%;
+    min-width: 0;
+}
+
+.venda-kpi-card {
+    background-color: #FFFFFF;
+    border: 1px solid #CBD5E1;
+    border-radius: 8px;
+    padding: 14px 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 4px;
+    box-sizing: border-box;
+    cursor: pointer;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.venda-kpi-card:hover {
+    border-color: #215BA6;
+}
+
+.venda-kpi-card.ativo {
+    border-color: #215BA6;
+    background-color: #F8FAFC;
+    box-shadow: 0 0 0 2px rgba(33, 91, 166, 0.12);
+}
+
+.venda-kpi-card.destaque-azul {
+    cursor: default;
+    border-left: 4px solid #215BA6;
+}
+
+.venda-kpi-label {
+    color: #475569;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.venda-kpi-valor {
+    color: #0F172A;
+    font-size: 1.65rem;
+    font-weight: 700;
+    line-height: 1.15;
+}
+
+.venda-kpi-valor.texto-verde {
+    color: #166534;
+}
+
+.venda-kpi-valor.texto-amarelo {
+    color: #B45309;
+}
+
+.venda-kpi-sub {
+    color: #215BA6;
+    font-size: 0.78rem;
+    font-weight: 500;
+}
+
+/* =========================================
+   TABELA DE VENDAS REGISTRADAS
+========================================= */
+.vendas-table td {
+    vertical-align: middle;
+}
+
+.venda-cell-principal {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.venda-cell-principal strong {
+    color: #1E293B;
+    font-size: 0.94rem;
+}
+
+.venda-cell-principal small {
+    color: #64748B;
+    font-size: 0.8rem;
+}
+
+.talao-badge-tabela {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    background-color: #0B2B46;
+    color: #FFFFFF;
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 6px;
+    letter-spacing: 0.02em;
+}
+
+.valor-venda-tabela {
+    color: #215BA6 !important;
+    font-size: 1rem !important;
+}
+
+.vendas-acoes-row {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.btn-acao-venda {
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    border: 1px solid transparent;
+}
+
+.btn-acao-venda.os {
+    background-color: #EFF6FF;
+    color: #1D4ED8;
+    border-color: #BFDBFE;
+}
+
+.btn-acao-venda.os:hover {
+    background-color: #DBEAFE;
+}
+
+.btn-acao-venda.editar {
+    background-color: #FFFFFF;
+    color: #1E3A5F;
+    border-color: #CBD5E1;
+}
+
+.btn-acao-venda.editar:hover {
+    background-color: #F1F5F9;
+    border-color: #94A3B8;
+}
+
+.btn-acao-venda.excluir {
+    background-color: #FFFFFF;
+    color: #DC2626;
+    border-color: #FECACA;
+}
+
+.btn-acao-venda.excluir:hover {
+    background-color: #FEE2E2;
+    border-color: #FCA5A5;
+}
+
+/* =========================================
+   STEPPER DE ETAPAS DA VENDA
+========================================= */
 .vendas-stepper {
     display: flex;
     align-items: center;
@@ -74,6 +260,13 @@
 /* =========================================
    ETAPA 1: Identificar / Selecionar Cliente
 ========================================= */
+.vendas-etapa-cliente {
+    width: 100%;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
 .vendas-busca-card {
     background-color: #FFFFFF;
     border: 1px solid #CBD5E1;
@@ -82,6 +275,9 @@
     display: flex;
     flex-direction: column;
     gap: 18px;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
 }
 
 .vendas-busca-header {
@@ -90,6 +286,7 @@
     align-items: center;
     flex-wrap: wrap;
     gap: 12px;
+    width: 100%;
 }
 
 .vendas-busca-header h3 {
@@ -138,6 +335,7 @@
     border-radius: 8px;
     overflow: hidden;
     background-color: #F8FAFC;
+    width: 100%;
 }
 
 .vendas-lista-scroll {
@@ -156,6 +354,7 @@
     border-bottom: 1px solid #E2E8F0;
     cursor: pointer;
     transition: all 0.15s ease;
+    gap: 12px;
 }
 
 .venda-cliente-item:last-child {
@@ -175,6 +374,7 @@
     display: flex;
     align-items: center;
     gap: 14px;
+    min-width: 0;
 }
 
 .venda-cliente-avatar {
@@ -201,12 +401,14 @@
     display: flex;
     flex-direction: column;
     gap: 3px;
+    min-width: 0;
 }
 
 .venda-cliente-nome-linha {
     display: flex;
     align-items: center;
     gap: 10px;
+    flex-wrap: wrap;
 }
 
 .venda-cliente-nome-linha strong,
@@ -297,6 +499,8 @@
     border-radius: 8px;
     flex-wrap: wrap;
     gap: 12px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .cliente-selecionado-resumo {
@@ -340,6 +544,8 @@
     display: flex;
     flex-direction: column;
     gap: 18px;
+    width: 100%;
+    min-width: 0;
 }
 
 .venda-cliente-ativo-banner {
@@ -353,37 +559,49 @@
     align-items: center;
     flex-wrap: wrap;
     gap: 16px;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
 }
 
 .venda-cliente-ativo-esq {
     display: flex;
     align-items: center;
     gap: 14px;
+    min-width: 0;
 }
 
 .btn-trocar-cliente {
     height: 36px;
     padding: 0 16px;
     font-size: 0.85rem;
+    flex-shrink: 0;
 }
 
 /* Layout em 2 colunas na Etapa 2 */
 .venda-form-grid {
     display: grid;
-    grid-template-columns: 1.85fr 1fr;
+    grid-template-columns: minmax(0, 1.85fr) minmax(0, 1fr);
     gap: 20px;
     align-items: start;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
 }
 
 .venda-col-principal {
     display: flex;
     flex-direction: column;
     gap: 18px;
+    width: 100%;
+    min-width: 0;
 }
 
 .venda-col-resumo {
     position: sticky;
     top: 0;
+    width: 100%;
+    min-width: 0;
 }
 
 .venda-section-card {
@@ -394,6 +612,9 @@
     display: flex;
     flex-direction: column;
     gap: 14px;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
 }
 
 .venda-section-title {
@@ -409,6 +630,7 @@
     align-items: center;
     flex-wrap: wrap;
     gap: 12px;
+    width: 100%;
 }
 
 /* Campos do formulário */
@@ -416,6 +638,8 @@
     display: flex;
     flex-direction: column;
     gap: 4px;
+    width: 100%;
+    min-width: 0;
 }
 
 .venda-field label {
@@ -426,6 +650,9 @@
 
 .venda-field input,
 .venda-field select {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
     height: 38px;
     border: 1px solid #CBD5E1;
     border-radius: 6px;
@@ -446,20 +673,26 @@
 
 .venda-row-2 {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 14px;
+    width: 100%;
+    min-width: 0;
 }
 
 .venda-row-3 {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 14px;
+    width: 100%;
+    min-width: 0;
 }
 
 .venda-row-4 {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 12px;
+    width: 100%;
+    min-width: 0;
 }
 
 /* Pílulas de modo de Receita */
@@ -497,6 +730,11 @@
     margin: 0;
 }
 
+.receita-existente-box {
+    width: 100%;
+    min-width: 0;
+}
+
 .receita-vazia-box {
     display: flex;
     justify-content: space-between;
@@ -532,6 +770,8 @@
     gap: 14px;
     padding-top: 6px;
     border-top: 1px solid #E2E8F0;
+    width: 100%;
+    min-width: 0;
 }
 
 .olhos-grid-box {
@@ -542,11 +782,14 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
 }
 
 .olhos-grid-header {
     display: grid;
-    grid-template-columns: 120px repeat(4, 1fr);
+    grid-template-columns: 120px repeat(4, minmax(0, 1fr));
     gap: 10px;
     font-size: 0.8rem;
     font-weight: 700;
@@ -557,7 +800,7 @@
 
 .olhos-grid-row {
     display: grid;
-    grid-template-columns: 120px repeat(4, 1fr);
+    grid-template-columns: 120px repeat(4, minmax(0, 1fr));
     gap: 10px;
     align-items: center;
 }
@@ -578,6 +821,7 @@
     background-color: #FFFFFF;
     outline: none;
     width: 100%;
+    min-width: 0;
     box-sizing: border-box;
 }
 
@@ -594,6 +838,9 @@
     display: flex;
     flex-direction: column;
     gap: 12px;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
 }
 
 .fin-linha {
@@ -631,6 +878,26 @@
     font-size: 0.88rem;
 }
 
+.checkbox-recalcular-parcelas {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #EFF6FF;
+    border: 1px solid #BFDBFE;
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-size: 0.84rem;
+    font-weight: 600;
+    color: #1E3A5F;
+    cursor: pointer;
+}
+
+.checkbox-recalcular-parcelas input {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
 /* Prévia de Parcelas */
 .previa-parcelas-box {
     background-color: #F8FAFC;
@@ -640,6 +907,9 @@
     display: flex;
     flex-direction: column;
     gap: 6px;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
 }
 
 .previa-titulo {
@@ -703,6 +973,8 @@
     align-items: center;
     text-align: center;
     gap: 10px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .sucesso-icone {
@@ -745,29 +1017,358 @@
     gap: 14px;
     margin-top: 14px;
     flex-wrap: wrap;
+    justify-content: center;
+}
+
+/* =========================================
+   MODAL DE CONFIRMAÇÃO DE EXCLUSÃO
+========================================= */
+.modal-exclusao-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(15, 23, 42, 0.55);
+    backdrop-filter: blur(2px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+.modal-exclusao-card {
+    background-color: #FFFFFF;
+    border: 2px solid #DC2626;
+    border-radius: 10px;
+    max-width: 480px;
+    width: 100%;
+    padding: 24px 26px;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.22);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.modal-exclusao-card h3 {
+    margin: 0;
+    color: #991B1B;
+    font-size: 1.2rem;
+}
+
+.modal-exclusao-card p {
+    margin: 0;
+    color: #1E293B;
+    font-size: 0.95rem;
+    line-height: 1.45;
+}
+
+.modal-exclusao-aviso {
+    background-color: #FEF2F2;
+    border: 1px solid #FECACA;
+    color: #991B1B;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.82rem;
+}
+
+.modal-exclusao-acoes {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.btn-confirmar-exclusao {
+    background-color: #DC2626;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 8px;
+    height: 42px;
+    padding: 0 18px;
+    font-size: 0.92rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.btn-confirmar-exclusao:hover:not(:disabled) {
+    background-color: #B91C1C;
+}
+
+.btn-confirmar-exclusao:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
 }
 
 /* Responsividade */
+@media (max-width: 1100px) {
+    .vendas-kpis-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
 @media (max-width: 1050px) {
     .venda-form-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
     }
 
     .venda-row-4 {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
 @media (max-width: 680px) {
+    .vendas-kpis-grid,
     .venda-row-2,
     .venda-row-3,
     .venda-row-4 {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
     }
 
     .olhos-grid-header,
     .olhos-grid-row {
-        grid-template-columns: 90px repeat(4, 1fr);
+        grid-template-columns: 90px repeat(4, minmax(0, 1fr));
         gap: 6px;
     }
+}
+
+
+/* =========================================
+   MODAL E BOTÃO DA FOLHA DE VENDAS (PDF)
+========================================= */
+.btn-folha-pdf {
+    color: #0B2B46;
+    border-color: #93C5FD;
+    background-color: #EFF6FF;
+    font-weight: 600;
+}
+
+.btn-folha-pdf:hover {
+    background-color: #DBEAFE;
+    border-color: #215BA6;
+}
+
+.modal-folha-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(15, 23, 42, 0.58);
+    backdrop-filter: blur(2px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 18px;
+    box-sizing: border-box;
+}
+
+.modal-folha-card {
+    background-color: #FFFFFF;
+    border: 2px solid #215BA6;
+    border-radius: 10px;
+    width: 96vw;
+    max-width: 1280px;
+    max-height: 90vh;
+    padding: 20px 24px;
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.25);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    box-sizing: border-box;
+}
+
+.modal-folha-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #CBD5E1;
+}
+
+.modal-folha-header h3 {
+    margin: 0;
+    color: #0B2B46;
+    font-size: 1.25rem;
+}
+
+.modal-folha-header p {
+    margin: 4px 0 0 0;
+    color: #64748B;
+    font-size: 0.88rem;
+}
+
+.btn-fechar-folha {
+    background: #F1F5F9;
+    border: 1px solid #CBD5E1;
+    border-radius: 6px;
+    width: 32px;
+    height: 32px;
+    font-size: 1rem;
+    color: #475569;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-fechar-folha:hover {
+    background: #FEE2E2;
+    color: #DC2626;
+    border-color: #FCA5A5;
+}
+
+.modal-folha-config-bar {
+    display: grid;
+    grid-template-columns: 200px 260px 1fr;
+    gap: 16px;
+    align-items: end;
+    background-color: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    padding: 12px 16px;
+    border-radius: 8px;
+}
+
+.folha-checkbox-filtro {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #1E3A5F;
+    height: 38px;
+    cursor: pointer;
+}
+
+.folha-checkbox-filtro input {
+    width: 16px;
+    height: 16px;
+    accent-color: #215BA6;
+}
+
+.folha-preview-banner {
+    background-color: #0B2B46;
+    color: #FFFFFF;
+    font-weight: 800;
+    font-size: 0.95rem;
+    letter-spacing: 0.04em;
+    text-align: center;
+    padding: 8px 14px;
+    border-radius: 6px;
+    text-transform: uppercase;
+}
+
+.folha-preview-table-wrapper {
+    flex: 1;
+    min-height: 200px;
+    max-height: 46vh;
+    overflow: auto;
+    border: 1px solid #CBD5E1;
+    border-radius: 6px;
+}
+
+.folha-preview-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.78rem;
+}
+
+.folha-preview-table th {
+    position: sticky;
+    top: 0;
+    background-color: #E2E8F0;
+    color: #0F172A;
+    font-weight: 800;
+    text-transform: uppercase;
+    padding: 8px 6px;
+    border: 1px solid #94A3B8;
+    white-space: nowrap;
+    z-index: 2;
+}
+
+.folha-preview-table td {
+    padding: 5px 6px;
+    border: 1px solid #CBD5E1;
+    color: #1E293B;
+    vertical-align: middle;
+}
+
+.folha-preview-table tr.linha-desmarcada {
+    opacity: 0.45;
+    background-color: #F8FAFC;
+}
+
+.col-talao-bold {
+    font-weight: 800;
+    text-align: center;
+    color: #0B2B46;
+}
+
+.col-titular-bold {
+    font-weight: 700;
+    min-width: 150px;
+}
+
+.folha-inline-input {
+    width: 100%;
+    min-width: 78px;
+    height: 28px;
+    border: 1px solid #CBD5E1;
+    border-radius: 4px;
+    padding: 0 6px;
+    font-size: 0.78rem;
+    color: #0F172A;
+    background-color: #FFFFFF;
+    box-sizing: border-box;
+}
+
+.folha-inline-input.num {
+    text-align: right;
+    min-width: 72px;
+}
+
+.folha-inline-input:focus {
+    border-color: #215BA6;
+    outline: none;
+    background-color: #EFF6FF;
+}
+
+.folha-empty-row {
+    text-align: center;
+    padding: 28px !important;
+    color: #64748B;
+}
+
+.modal-folha-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-top: 8px;
+    border-top: 1px solid #CBD5E1;
+}
+
+.folha-resumo-totais {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    font-size: 0.86rem;
+    color: #334155;
+}
+
+.folha-resumo-totais strong {
+    color: #0B2B46;
+}
+
+.modal-folha-acoes {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }

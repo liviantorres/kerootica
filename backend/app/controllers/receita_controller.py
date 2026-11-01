@@ -1,12 +1,13 @@
 from flask import jsonify, request
 from marshmallow import ValidationError
 
+from app.extensions import db
 from app.schemas.receita_schema import ReceitaSchema
-
 from app.services.receita_service import ReceitaService
 
 receita_schema = ReceitaSchema()
 receitas_schema = ReceitaSchema(many=True)
+
 
 class ReceitaController:
 
@@ -19,17 +20,24 @@ class ReceitaController:
             return jsonify(
                 receita_schema.dump(receita)
             ), 201
-        
+
         except ValidationError as err:
             return jsonify({
-                "erro":"Dados inválidos",
+                "erro": "Dados inválidos",
                 "detalhes": err.messages
             }), 400
 
         except ValueError as err:
             return jsonify({
-                "erro": str(err) 
+                "erro": str(err)
             }), 409
+
+        except Exception as err:
+            db.session.rollback()
+            return jsonify({
+                "erro": "Erro interno ao salvar a receita.",
+                "detalhes": str(err)
+            }), 500
 
     @staticmethod
     def listar():
@@ -47,7 +55,7 @@ class ReceitaController:
             return jsonify(
                 receita_schema.dump(receita)
             ), 200
-        
+
         except ValueError as err:
             return jsonify({
                 "erro": str(err)
@@ -65,7 +73,7 @@ class ReceitaController:
     def atualizar(receita_id):
         try:
             dados = receita_schema.load(
-                request.get_json(), 
+                request.get_json(),
                 partial=True
             )
 
@@ -86,6 +94,13 @@ class ReceitaController:
                 "erro": str(err)
             }), 404
 
+        except Exception as err:
+            db.session.rollback()
+            return jsonify({
+                "erro": "Erro interno ao atualizar a receita.",
+                "detalhes": str(err)
+            }), 500
+
     @staticmethod
     def deletar(receita_id):
         try:
@@ -99,3 +114,10 @@ class ReceitaController:
             return jsonify({
                 "erro": str(err)
             }), 404
+
+        except Exception as err:
+            db.session.rollback()
+            return jsonify({
+                "erro": "Erro interno ao excluir a receita.",
+                "detalhes": str(err)
+            }), 500

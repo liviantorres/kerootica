@@ -1,6 +1,7 @@
 from flask import jsonify, request
 from marshmallow import ValidationError
 
+from app.extensions import db
 from app.schemas.venda_schema import VendaSchema
 from app.services.venda_service import VendaService
 
@@ -33,6 +34,13 @@ class VendaController:
                 "erro": str(err)
             }), 409
 
+        except Exception as err:
+            db.session.rollback()
+            return jsonify({
+                "erro": "Erro interno ao registrar a venda.",
+                "detalhes": str(err)
+            }), 500
+
     @staticmethod
     def buscar_por_id(venda_id):
         try:
@@ -49,31 +57,19 @@ class VendaController:
 
     @staticmethod
     def buscar_por_cliente(cliente_id):
-        try:
-            vendas = VendaService.buscar_por_cliente(cliente_id)
+        vendas = VendaService.buscar_por_cliente(cliente_id)
 
-            return jsonify(
-                vendas_schema.dump(vendas)
-            ), 200
-
-        except ValueError as err:
-            return jsonify({
-                "erro": str(err)
-            }), 404
+        return jsonify(
+            vendas_schema.dump(vendas)
+        ), 200
 
     @staticmethod
     def buscar_por_receita(receita_id):
-        try:
-            vendas = VendaService.buscar_por_receita(receita_id)
+        vendas = VendaService.buscar_por_receita(receita_id)
 
-            return jsonify(
-                vendas_schema.dump(vendas)
-            ), 200
-
-        except ValueError as err:
-            return jsonify({
-                "erro": str(err)
-            }), 404
+        return jsonify(
+            vendas_schema.dump(vendas)
+        ), 200
 
     @staticmethod
     def buscar_por_numero_talao(numero_talao):
@@ -127,6 +123,13 @@ class VendaController:
                 "erro": str(err)
             }), 404
 
+        except Exception as err:
+            db.session.rollback()
+            return jsonify({
+                "erro": "Erro interno ao atualizar a venda.",
+                "detalhes": str(err)
+            }), 500
+
     @staticmethod
     def deletar(venda_id):
         try:
@@ -140,3 +143,10 @@ class VendaController:
             return jsonify({
                 "erro": str(err)
             }), 404
+
+        except Exception as err:
+            db.session.rollback()
+            return jsonify({
+                "erro": "Erro interno ao excluir a venda.",
+                "detalhes": str(err)
+            }), 500

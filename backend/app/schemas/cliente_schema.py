@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from marshmallow import Schema, fields, validate, EXCLUDE
 
 
@@ -90,3 +91,34 @@ class ClienteSchema(Schema):
     data_cadastro = fields.DateTime(
         dump_only=True
     )
+
+    situacao = fields.Method("obter_situacao", dump_only=True)
+
+    def obter_situacao(self, obj):
+        vendas = getattr(obj, "vendas", None) or []
+        if not vendas:
+            return None
+
+        agora = datetime.utcnow()
+        tem_atrasada = False
+        tem_pendente = False
+        tem_garantia_ativa = False
+
+        for venda in vendas:
+            if venda.data_venda and (venda.data_venda + timedelta(days=365)) >= agora:
+                tem_garantia_ativa = True
+
+            for parc in (getattr(venda, "parcelas", None) or []):
+                if parc.status != "Pago":
+                    if parc.status == "Vencido" or (parc.data_vencimento and parc.data_vencimento < agora):
+                        tem_atrasada = True
+                    else:
+                        tem_pendente = True
+
+        if tem_atrasada:
+            return "Atrasada"
+        if tem_pendente:
+            return "Regular"
+        if tem_garantia_ativa:
+            return "Garantia"
+        return "Regular"

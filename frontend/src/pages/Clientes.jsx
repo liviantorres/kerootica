@@ -15,6 +15,26 @@ import {
 } from '../utils/gerarPdfDocumentos';
 import '../pages/styles/Clientes.css';
 
+const initialReceitaForm = {
+    optometrista: '',
+    tipo_lente: '',
+    tratamento: '',
+    ceratometria_od: '',
+    ceratometria_oe: '',
+    condicao_motora: '',
+    lagrima: '',
+    data_retorno: '',
+    observacao: '',
+    od_esferico: '',
+    od_cilindrico: '',
+    od_eixo: '',
+    od_acuidade: '',
+    oe_esferico: '',
+    oe_cilindrico: '',
+    oe_eixo: '',
+    oe_acuidade: ''
+};
+
 export default function Clientes() {
     const navigate = useNavigate();
     const [clientes, setClientes] = useState([]);
@@ -37,6 +57,19 @@ export default function Clientes() {
 
     // Modal de Detalhes Completos e Validação da Compra
     const [vendaDetalheSelecionada, setVendaDetalheSelecionada] = useState(null);
+
+    // Estados para Nova/Edição/Exclusão de Receita na aba Receitas
+    const [isModalReceitaOpen, setIsModalReceitaOpen] = useState(false);
+    const [receitaEmEdicao, setReceitaEmEdicao] = useState(null);
+    const [receitaForm, setReceitaForm] = useState(initialReceitaForm);
+    const [salvandoReceita, setSalvandoReceita] = useState(false);
+    const [erroReceita, setErroReceita] = useState('');
+    const [receitaParaExcluir, setReceitaParaExcluir] = useState(null);
+    const [excluindoReceita, setExcluindoReceita] = useState(false);
+
+    // Estados para Exclusão de Cliente com confirmação
+    const [clienteParaExcluir, setClienteParaExcluir] = useState(null);
+    const [excluindoCliente, setExcluindoCliente] = useState(false);
 
     const filtroDropdownRef = useRef(null);
     const itemsPerPage = 6;
@@ -62,9 +95,11 @@ export default function Clientes() {
         try {
             setLoading(true);
             const response = await api.get('/api/clientes');
-            setClientes(response.data);
+            const lista = Array.isArray(response.data) ? response.data : [];
+            setClientes(lista);
             if (clienteAtualizado && clienteSelecionado && clienteAtualizado.id === clienteSelecionado.id) {
-                setClienteSelecionado(clienteAtualizado);
+                const sincronizado = lista.find(c => c.id === clienteAtualizado.id) || clienteAtualizado;
+                setClienteSelecionado(sincronizado);
             }
         } catch (error) {
             console.error('Erro ao buscar clientes:', error);
@@ -131,7 +166,10 @@ export default function Clientes() {
             }
             await api.patch(`/api/parcelas/${parcela.id}`, payload);
             if (clienteSelecionado) {
-                await carregarHistoricoDoCliente(clienteSelecionado.id);
+                await Promise.all([
+                    carregarHistoricoDoCliente(clienteSelecionado.id),
+                    carregarClientes(clienteSelecionado)
+                ]);
             }
         } catch (error) {
             console.error('Erro ao validar pagamento da parcela:', error);
@@ -145,7 +183,10 @@ export default function Clientes() {
                 data_pagamento: null
             });
             if (clienteSelecionado) {
-                await carregarHistoricoDoCliente(clienteSelecionado.id);
+                await Promise.all([
+                    carregarHistoricoDoCliente(clienteSelecionado.id),
+                    carregarClientes(clienteSelecionado)
+                ]);
             }
         } catch (error) {
             console.error('Erro ao reabrir parcela:', error);
@@ -162,10 +203,147 @@ export default function Clientes() {
                 });
             }
             if (clienteSelecionado) {
-                await carregarHistoricoDoCliente(clienteSelecionado.id);
+                await Promise.all([
+                    carregarHistoricoDoCliente(clienteSelecionado.id),
+                    carregarClientes(clienteSelecionado)
+                ]);
             }
         } catch (error) {
             console.error('Erro ao quitar todas as parcelas:', error);
+        }
+    };
+
+    // =========================================================================
+    // GESTÃO DE RECEITAS ÓPTICAS NA TELA DO CLIENTE (CRIAR / EDITAR / EXCLUIR)
+    // =========================================================================
+    const handleAbrirNovaReceita = () => {
+        setReceitaEmEdicao(null);
+        setReceitaForm(initialReceitaForm);
+        setErroReceita('');
+        setIsModalReceitaOpen(true);
+    };
+
+    const handleAbrirEditarReceita = (rec) => {
+        const olhoD = rec.olhos?.find(o => o.olho === 'direito');
+        const olhoE = rec.olhos?.find(o => o.olho === 'esquerdo');
+
+        setReceitaEmEdicao(rec);
+        setReceitaForm({
+            optometrista: rec.optometrista || '',
+            tipo_lente: rec.tipo_lente || '',
+            tratamento: rec.tratamento || '',
+            ceratometria_od: rec.ceratometria_od || '',
+            ceratometria_oe: rec.ceratometria_oe || '',
+            condicao_motora: rec.condicao_motora || '',
+            lagrima: rec.lagrima || '',
+            data_retorno: rec.data_retorno ? rec.data_retorno.split('T')[0] : '',
+            observacao: rec.observacao || '',
+            od_esferico: olhoD?.esferico != null ? String(olhoD.esferico) : '',
+            od_cilindrico: olhoD?.cilindrico != null ? String(olhoD.cilindrico) : '',
+            od_eixo: olhoD?.eixo != null ? String(olhoD.eixo) : '',
+            od_acuidade: olhoD?.acuidade_visual != null ? String(olhoD.acuidade_visual) : '',
+            oe_esferico: olhoE?.esferico != null ? String(olhoE.esferico) : '',
+            oe_cilindrico: olhoE?.cilindrico != null ? String(olhoE.cilindrico) : '',
+            oe_eixo: olhoE?.eixo != null ? String(olhoE.eixo) : '',
+            oe_acuidade: olhoE?.acuidade_visual != null ? String(olhoE.acuidade_visual) : ''
+        });
+        setErroReceita('');
+        setIsModalReceitaOpen(true);
+    };
+
+    const handleReceitaFormChange = (e) => {
+        const { name, value } = e.target;
+        setReceitaForm(prev => ({ ...prev, [name]: value }));
+        if (erroReceita) setErroReceita('');
+    };
+
+    const handleSalvarReceita = async (e) => {
+        e.preventDefault();
+        if (!clienteSelecionado) return;
+
+        setSalvandoReceita(true);
+        setErroReceita('');
+
+        const payload = {
+            cliente_id: clienteSelecionado.id,
+            optometrista: receitaForm.optometrista.trim() || null,
+            tipo_lente: receitaForm.tipo_lente.trim() || null,
+            tratamento: receitaForm.tratamento.trim() || null,
+            ceratometria_od: receitaForm.ceratometria_od.trim() || null,
+            ceratometria_oe: receitaForm.ceratometria_oe.trim() || null,
+            condicao_motora: receitaForm.condicao_motora.trim() || null,
+            lagrima: receitaForm.lagrima.trim() || null,
+            data_retorno: receitaForm.data_retorno || null,
+            observacao: receitaForm.observacao.trim() || null,
+            olhos: [
+                {
+                    olho: 'direito',
+                    esferico: receitaForm.od_esferico !== '' ? parseFloat(receitaForm.od_esferico) : null,
+                    cilindrico: receitaForm.od_cilindrico !== '' ? parseFloat(receitaForm.od_cilindrico) : null,
+                    eixo: receitaForm.od_eixo !== '' ? parseFloat(receitaForm.od_eixo) : null,
+                    acuidade_visual: receitaForm.od_acuidade !== '' ? parseFloat(receitaForm.od_acuidade) : null
+                },
+                {
+                    olho: 'esquerdo',
+                    esferico: receitaForm.oe_esferico !== '' ? parseFloat(receitaForm.oe_esferico) : null,
+                    cilindrico: receitaForm.oe_cilindrico !== '' ? parseFloat(receitaForm.oe_cilindrico) : null,
+                    eixo: receitaForm.oe_eixo !== '' ? parseFloat(receitaForm.oe_eixo) : null,
+                    acuidade_visual: receitaForm.oe_acuidade !== '' ? parseFloat(receitaForm.oe_acuidade) : null
+                }
+            ]
+        };
+
+        try {
+            if (receitaEmEdicao?.id) {
+                const { cliente_id, ...payloadUpdate } = payload;
+                await api.patch(`/api/receitas/${receitaEmEdicao.id}`, payloadUpdate);
+            } else {
+                await api.post('/api/receitas', payload);
+            }
+            setIsModalReceitaOpen(false);
+            setReceitaEmEdicao(null);
+            await carregarHistoricoDoCliente(clienteSelecionado.id);
+        } catch (error) {
+            const msg = error.response?.data?.erro ||
+                        error.response?.data?.detalhes ||
+                        'Erro ao salvar a receita óptica.';
+            setErroReceita(typeof msg === 'string' ? msg : JSON.stringify(msg));
+        } finally {
+            setSalvandoReceita(false);
+        }
+    };
+
+    const handleConfirmarExclusaoReceita = async () => {
+        if (!receitaParaExcluir || !clienteSelecionado) return;
+        setExcluindoReceita(true);
+        try {
+            await api.delete(`/api/receitas/${receitaParaExcluir.id}`);
+            setReceitaParaExcluir(null);
+            await carregarHistoricoDoCliente(clienteSelecionado.id);
+        } catch (error) {
+            alert(error.response?.data?.erro || 'Não foi possível excluir a receita.');
+        } finally {
+            setExcluindoReceita(false);
+        }
+    };
+
+    // =========================================================================
+    // EXCLUSÃO DE CLIENTE COM CONFIRMAÇÃO
+    // =========================================================================
+    const handleConfirmarExclusaoCliente = async () => {
+        if (!clienteParaExcluir) return;
+        setExcluindoCliente(true);
+        try {
+            await api.delete(`/api/clientes/${clienteParaExcluir.id}`);
+            if (clienteSelecionado?.id === clienteParaExcluir.id) {
+                setClienteSelecionado(null);
+            }
+            setClienteParaExcluir(null);
+            await carregarClientes();
+        } catch (error) {
+            alert(error.response?.data?.erro || 'Não foi possível excluir o cliente.');
+        } finally {
+            setExcluindoCliente(false);
         }
     };
 
@@ -305,11 +483,11 @@ export default function Clientes() {
     // Render badge de situação
     const renderSituacao = (situacao) => {
         if (!situacao) return <span className="badge badge-empty">-</span>;
-        
+
         let badgeClass = 'badge-regular';
         if (situacao.toLowerCase().includes('atrasada')) badgeClass = 'badge-atrasada';
         else if (situacao.toLowerCase().includes('garantia')) badgeClass = 'badge-garantia';
-        
+
         return <span className={`badge ${badgeClass}`}>{situacao}</span>;
     };
 
@@ -439,8 +617,8 @@ export default function Clientes() {
 
         return (
             <div className="page-container cliente-detalhe-container">
-                <button 
-                    className="btn-voltar" 
+                <button
+                    className="btn-voltar"
                     onClick={() => setClienteSelecionado(null)}
                 >
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -458,7 +636,7 @@ export default function Clientes() {
                         </p>
                     </div>
 
-                    <button 
+                    <button
                         className="btn-primary"
                         onClick={() => navigate('/vendas', { state: { cliente: clienteSelecionado } })}
                     >
@@ -503,36 +681,45 @@ export default function Clientes() {
                             </div>
                         </div>
 
-                        <button 
-                            className="btn-editar-cadastro"
-                            onClick={() => handleAbrirEdicaoModal(clienteSelecionado)}
-                        >
-                            Editar cadastro
-                        </button>
+                        <div className="cliente-perfil-acoes-stack">
+                            <button
+                                className="btn-editar-cadastro"
+                                onClick={() => handleAbrirEdicaoModal(clienteSelecionado)}
+                            >
+                                Editar cadastro
+                            </button>
+                            <button
+                                type="button"
+                                className="btn-excluir-cadastro"
+                                onClick={() => setClienteParaExcluir(clienteSelecionado)}
+                            >
+                                Excluir cliente
+                            </button>
+                        </div>
                     </div>
 
                     {/* Área direita com as abas e cards */}
                     <div className="cliente-conteudo-direita">
                         <div className="cliente-tabs">
-                            <button 
+                            <button
                                 className={`cliente-tab ${abaAtiva === 'visao_geral' ? 'active' : ''}`}
                                 onClick={() => setAbaAtiva('visao_geral')}
                             >
                                 Visão Geral
                             </button>
-                            <button 
+                            <button
                                 className={`cliente-tab ${abaAtiva === 'receitas' ? 'active' : ''}`}
                                 onClick={() => setAbaAtiva('receitas')}
                             >
                                 Receitas
                             </button>
-                            <button 
+                            <button
                                 className={`cliente-tab ${abaAtiva === 'compras' ? 'active' : ''}`}
                                 onClick={() => setAbaAtiva('compras')}
                             >
                                 Compras
                             </button>
-                            <button 
+                            <button
                                 className={`cliente-tab ${abaAtiva === 'parcelas' ? 'active' : ''}`}
                                 onClick={() => setAbaAtiva('parcelas')}
                             >
@@ -608,12 +795,22 @@ export default function Clientes() {
                                 <div className="aba-topo-bar">
                                     <div>
                                         <h4 className="historico-titulo">Receitas Ópticas ({receitasCliente.length})</h4>
-                                        <span className="aba-sub-hint">Consulte o histórico de dioptrias e gere a prescrição em PDF</span>
+                                        <span className="aba-sub-hint">Consulte, cadastre, edite o histórico de dioptrias e gere a prescrição em PDF</span>
                                     </div>
+
+                                    <button
+                                        type="button"
+                                        className="btn-card-solid"
+                                        onClick={handleAbrirNovaReceita}
+                                    >
+                                        + Nova Receita
+                                    </button>
                                 </div>
 
                                 {receitasCliente.length === 0 ? (
-                                    <p className="aba-vazia-msg">Nenhuma receita cadastrada para este cliente.</p>
+                                    <p className="aba-vazia-msg">
+                                        Nenhuma receita cadastrada para este cliente. Clique em "+ Nova Receita" para cadastrar.
+                                    </p>
                                 ) : (
                                     <div className="aba-itens-scroll">
                                         {receitasCliente.map(rec => {
@@ -647,6 +844,20 @@ export default function Clientes() {
                                                                     <polyline points="14 2 14 8 20 8"></polyline>
                                                                 </svg>
                                                                 Salvar PDF
+                                                            </button>
+                                                            <button
+                                                                type="button"
+                                                                className="btn-card-ghost"
+                                                                onClick={() => handleAbrirEditarReceita(rec)}
+                                                            >
+                                                                Editar
+                                                            </button>
+                                                            <button
+                                                                type="button"
+                                                                className="btn-card-danger"
+                                                                onClick={() => setReceitaParaExcluir(rec)}
+                                                            >
+                                                                Excluir
                                                             </button>
                                                             {vendaVinculada && (
                                                                 <button
@@ -1137,6 +1348,305 @@ export default function Clientes() {
                     onClienteCadastrado={carregarClientes}
                     clienteParaEditar={clienteEmEdicao}
                 />
+
+                {/* Modal de Cadastro / Edição de Receita Óptica */}
+                {isModalReceitaOpen && (
+                    <div className="modal-cliente-overlay" onClick={() => !salvandoReceita && setIsModalReceitaOpen(false)}>
+                        <div className="modal-receita-card" onClick={e => e.stopPropagation()}>
+                            <div className="modal-receita-header">
+                                <div>
+                                    <h3>
+                                        {receitaEmEdicao
+                                            ? `Editar Receita Óptica #${String(receitaEmEdicao.id).padStart(3, '0')}`
+                                            : 'Nova Receita Óptica'}
+                                    </h3>
+                                    <p>Paciente: <strong>{clienteSelecionado.nome_completo}</strong></p>
+                                </div>
+                                <button
+                                    type="button"
+                                    className="btn-fechar-modal-rec"
+                                    onClick={() => setIsModalReceitaOpen(false)}
+                                >
+                                    ✕
+                                </button>
+                            </div>
+
+                            {erroReceita && <div className="receita-erro-msg">{erroReceita}</div>}
+
+                            <form onSubmit={handleSalvarReceita} className="modal-receita-form">
+                                <div className="rec-row-4">
+                                    <div className="rec-field">
+                                        <label>Optometrista</label>
+                                        <input
+                                            name="optometrista"
+                                            type="text"
+                                            maxLength={60}
+                                            placeholder="Nome do profissional"
+                                            value={receitaForm.optometrista}
+                                            onChange={handleReceitaFormChange}
+                                        />
+                                    </div>
+                                    <div className="rec-field">
+                                        <label>Tipo de Lente</label>
+                                        <input
+                                            name="tipo_lente"
+                                            type="text"
+                                            maxLength={25}
+                                            placeholder="Ex: Multifocal, Visão Simples"
+                                            value={receitaForm.tipo_lente}
+                                            onChange={handleReceitaFormChange}
+                                        />
+                                    </div>
+                                    <div className="rec-field">
+                                        <label>Tratamento</label>
+                                        <input
+                                            name="tratamento"
+                                            type="text"
+                                            maxLength={50}
+                                            placeholder="Ex: Antirreflexo, Filtro Azul"
+                                            value={receitaForm.tratamento}
+                                            onChange={handleReceitaFormChange}
+                                        />
+                                    </div>
+                                    <div className="rec-field">
+                                        <label>Data de Retorno</label>
+                                        <input
+                                            name="data_retorno"
+                                            type="date"
+                                            value={receitaForm.data_retorno}
+                                            onChange={handleReceitaFormChange}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="rec-olhos-box">
+                                    <div className="rec-olhos-header">
+                                        <span>Olho</span>
+                                        <span>Esférico</span>
+                                        <span>Cilíndrico</span>
+                                        <span>Eixo (°)</span>
+                                        <span>Acuidade Visual</span>
+                                    </div>
+                                    <div className="rec-olhos-row">
+                                        <span className="rec-olho-tag">OD (Direito)</span>
+                                        <input
+                                            name="od_esferico"
+                                            type="number"
+                                            step="0.25"
+                                            placeholder="0.00"
+                                            value={receitaForm.od_esferico}
+                                            onChange={handleReceitaFormChange}
+                                        />
+                                        <input
+                                            name="od_cilindrico"
+                                            type="number"
+                                            step="0.25"
+                                            placeholder="0.00"
+                                            value={receitaForm.od_cilindrico}
+                                            onChange={handleReceitaFormChange}
+                                        />
+                                        <input
+                                            name="od_eixo"
+                                            type="number"
+                                            step="1"
+                                            placeholder="0"
+                                            value={receitaForm.od_eixo}
+                                            onChange={handleReceitaFormChange}
+                                        />
+                                        <input
+                                            name="od_acuidade"
+                                            type="number"
+                                            step="0.1"
+                                            placeholder="1.0"
+                                            value={receitaForm.od_acuidade}
+                                            onChange={handleReceitaFormChange}
+                                        />
+                                    </div>
+                                    <div className="rec-olhos-row">
+                                        <span className="rec-olho-tag">OE (Esquerdo)</span>
+                                        <input
+                                            name="oe_esferico"
+                                            type="number"
+                                            step="0.25"
+                                            placeholder="0.00"
+                                            value={receitaForm.oe_esferico}
+                                            onChange={handleReceitaFormChange}
+                                        />
+                                        <input
+                                            name="oe_cilindrico"
+                                            type="number"
+                                            step="0.25"
+                                            placeholder="0.00"
+                                            value={receitaForm.oe_cilindrico}
+                                            onChange={handleReceitaFormChange}
+                                        />
+                                        <input
+                                            name="oe_eixo"
+                                            type="number"
+                                            step="1"
+                                            placeholder="0"
+                                            value={receitaForm.oe_eixo}
+                                            onChange={handleReceitaFormChange}
+                                        />
+                                        <input
+                                            name="oe_acuidade"
+                                            type="number"
+                                            step="0.1"
+                                            placeholder="1.0"
+                                            value={receitaForm.oe_acuidade}
+                                            onChange={handleReceitaFormChange}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="rec-row-4">
+                                    <div className="rec-field">
+                                        <label>Ceratometria OD</label>
+                                        <input
+                                            name="ceratometria_od"
+                                            type="text"
+                                            maxLength={25}
+                                            placeholder="Opcional"
+                                            value={receitaForm.ceratometria_od}
+                                            onChange={handleReceitaFormChange}
+                                        />
+                                    </div>
+                                    <div className="rec-field">
+                                        <label>Ceratometria OE</label>
+                                        <input
+                                            name="ceratometria_oe"
+                                            type="text"
+                                            maxLength={25}
+                                            placeholder="Opcional"
+                                            value={receitaForm.ceratometria_oe}
+                                            onChange={handleReceitaFormChange}
+                                        />
+                                    </div>
+                                    <div className="rec-field">
+                                        <label>Condição Motora</label>
+                                        <input
+                                            name="condicao_motora"
+                                            type="text"
+                                            maxLength={30}
+                                            placeholder="Opcional"
+                                            value={receitaForm.condicao_motora}
+                                            onChange={handleReceitaFormChange}
+                                        />
+                                    </div>
+                                    <div className="rec-field">
+                                        <label>Lágrima</label>
+                                        <input
+                                            name="lagrima"
+                                            type="text"
+                                            maxLength={20}
+                                            placeholder="Opcional"
+                                            value={receitaForm.lagrima}
+                                            onChange={handleReceitaFormChange}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="rec-field">
+                                    <label>Observações da Receita</label>
+                                    <input
+                                        name="observacao"
+                                        type="text"
+                                        placeholder="Observações adicionais..."
+                                        value={receitaForm.observacao}
+                                        onChange={handleReceitaFormChange}
+                                    />
+                                </div>
+
+                                <div className="modal-receita-footer">
+                                    <button
+                                        type="button"
+                                        className="btn-secondary"
+                                        onClick={() => setIsModalReceitaOpen(false)}
+                                        disabled={salvandoReceita}
+                                    >
+                                        Cancelar
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        className="btn-primary"
+                                        disabled={salvandoReceita}
+                                    >
+                                        {salvandoReceita
+                                            ? 'Salvando...'
+                                            : receitaEmEdicao
+                                                ? 'Salvar Alterações'
+                                                : 'Cadastrar Receita'}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                )}
+
+                {/* Modal de Confirmação de Exclusão de Receita */}
+                {receitaParaExcluir && (
+                    <div className="modal-cliente-overlay" onClick={() => !excluindoReceita && setReceitaParaExcluir(null)}>
+                        <div className="modal-confirm-danger-card" onClick={e => e.stopPropagation()}>
+                            <h3>Excluir Receita #{String(receitaParaExcluir.id).padStart(3, '0')}</h3>
+                            <p>
+                                Tem certeza que deseja excluir esta receita óptica de{' '}
+                                <strong>{clienteSelecionado.nome_completo}</strong>?
+                            </p>
+                            <div className="modal-confirm-danger-acoes">
+                                <button
+                                    type="button"
+                                    className="btn-secondary"
+                                    onClick={() => setReceitaParaExcluir(null)}
+                                    disabled={excluindoReceita}
+                                >
+                                    Cancelar
+                                </button>
+                                <button
+                                    type="button"
+                                    className="btn-confirm-danger"
+                                    onClick={handleConfirmarExclusaoReceita}
+                                    disabled={excluindoReceita}
+                                >
+                                    {excluindoReceita ? 'Excluindo...' : 'Sim, Excluir Receita'}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* Modal de Confirmação de Exclusão de Cliente */}
+                {clienteParaExcluir && (
+                    <div className="modal-cliente-overlay" onClick={() => !excluindoCliente && setClienteParaExcluir(null)}>
+                        <div className="modal-confirm-danger-card" onClick={e => e.stopPropagation()}>
+                            <h3>Excluir Cliente</h3>
+                            <p>
+                                Tem certeza que deseja excluir o cadastro de{' '}
+                                <strong>{clienteParaExcluir.nome_completo}</strong> (Ficha {clienteParaExcluir.numero_ficha})?
+                            </p>
+                            <span className="modal-confirm-danger-aviso">
+                                Atenção: As receitas, compras e parcelas vinculadas a este cliente também serão removidas.
+                            </span>
+                            <div className="modal-confirm-danger-acoes">
+                                <button
+                                    type="button"
+                                    className="btn-secondary"
+                                    onClick={() => setClienteParaExcluir(null)}
+                                    disabled={excluindoCliente}
+                                >
+                                    Cancelar
+                                </button>
+                                <button
+                                    type="button"
+                                    className="btn-confirm-danger"
+                                    onClick={handleConfirmarExclusaoCliente}
+                                    disabled={excluindoCliente}
+                                >
+                                    {excluindoCliente ? 'Excluindo...' : 'Sim, Excluir Cliente'}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
         );
     }
@@ -1144,16 +1654,16 @@ export default function Clientes() {
     return (
         <div className="page-container">
             <div className="page-header">
-                <div className='page-titles'>
+                <div className="page-titles">
                     <h2>Clientes</h2>
                     <p>Cadastre, pesquise e acompanhe todo o histórico</p>
                 </div>
             </div>
 
             <div className="action-bar">
-                <input 
-                    type="text" 
-                    placeholder="Pesquisar por nome, CPF, talão, telefone..." 
+                <input
+                    type="text"
+                    placeholder="Pesquisar por nome, CPF, talão, telefone..."
                     className="search-input"
                     value={searchTerm}
                     onChange={handleSearchChange}
@@ -1161,36 +1671,36 @@ export default function Clientes() {
 
                 <div className="action-buttons">
                     <div className="filter-wrapper" ref={filtroDropdownRef}>
-                        <button 
+                        <button
                             className={`btn-secondary ${filtroSituacao !== 'todos' ? 'active-filter' : ''}`}
                             onClick={() => setMostrarFiltrosMenu(!mostrarFiltrosMenu)}
                         >
-                            <img src={filtro} alt="Filtro" className="icon" /> 
+                            <img src={filtro} alt="Filtro" className="icon" />
                             {filtroSituacao === 'todos' ? 'Filtros' : `Filtro: ${filtroSituacao}`}
                         </button>
 
                         {mostrarFiltrosMenu && (
                             <div className="filtro-dropdown">
-                                <button 
-                                    className={filtroSituacao === 'todos' ? 'selected' : ''} 
+                                <button
+                                    className={filtroSituacao === 'todos' ? 'selected' : ''}
                                     onClick={() => { setFiltroSituacao('todos'); setMostrarFiltrosMenu(false); setCurrentPage(1); }}
                                 >
                                     Todos
                                 </button>
-                                <button 
-                                    className={filtroSituacao === 'regular' ? 'selected' : ''} 
+                                <button
+                                    className={filtroSituacao === 'regular' ? 'selected' : ''}
                                     onClick={() => { setFiltroSituacao('regular'); setMostrarFiltrosMenu(false); setCurrentPage(1); }}
                                 >
                                     Regular
                                 </button>
-                                <button 
-                                    className={filtroSituacao === 'atrasada' ? 'selected' : ''} 
+                                <button
+                                    className={filtroSituacao === 'atrasada' ? 'selected' : ''}
                                     onClick={() => { setFiltroSituacao('atrasada'); setMostrarFiltrosMenu(false); setCurrentPage(1); }}
                                 >
                                     Atrasada
                                 </button>
-                                <button 
-                                    className={filtroSituacao === 'garantia' ? 'selected' : ''} 
+                                <button
+                                    className={filtroSituacao === 'garantia' ? 'selected' : ''}
                                     onClick={() => { setFiltroSituacao('garantia'); setMostrarFiltrosMenu(false); setCurrentPage(1); }}
                                 >
                                     Garantia
@@ -1224,8 +1734,8 @@ export default function Clientes() {
                         ) : clientesFiltrados.length === 0 ? (
                             <tr>
                                 <td colSpan="5" className="empty-state">
-                                    {searchTerm 
-                                        ? `Nenhum cliente encontrado para "${searchTerm}".` 
+                                    {searchTerm
+                                        ? `Nenhum cliente encontrado para "${searchTerm}".`
                                         : 'Nenhum cliente cadastrado ainda.'}
                                 </td>
                             </tr>
@@ -1237,34 +1747,36 @@ export default function Clientes() {
                                     <td>{formatarTelefone(cliente.telefone1)}</td>
                                     <td>{renderSituacao(cliente.situacao)}</td>
                                     <td className="action-cell">
-                                        <button 
-                                            className="btn-icon"
-                                            onClick={() => handleAbrirCliente(cliente)}
-                                            title="Ver detalhes do cliente"
-                                        >
-                                            <img src={setaDireita} alt="Ações" className="action-arrow" />
-                                        </button>
+                                        <div className="clientes-table-actions">
+                                            <button
+                                                className="btn-icon"
+                                                onClick={() => handleAbrirCliente(cliente)}
+                                                title="Ver detalhes do cliente"
+                                            >
+                                                <img src={setaDireita} alt="Ações" className="action-arrow" />
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             ))
                         )}
                     </tbody>
                 </table>
-                
+
                 <div className="table-footer">
                     <span className="pagination-info">
                         Mostrando {clientesFiltrados.length === 0 ? 0 : indexOfFirstItem + 1} - {Math.min(indexOfLastItem, clientesFiltrados.length)} de {clientesFiltrados.length}.
                     </span>
                     <div className="pagination-controls">
-                        <button 
-                            className="btn-page" 
+                        <button
+                            className="btn-page"
                             onClick={handlePrevPage}
                             disabled={currentPage === 1 || clientesFiltrados.length === 0}
                         >
                             <img src={setaEsquerda} alt="Anterior" />
                         </button>
-                        <button 
-                            className="btn-page" 
+                        <button
+                            className="btn-page"
                             onClick={handleNextPage}
                             disabled={currentPage === totalPages || clientesFiltrados.length === 0}
                         >

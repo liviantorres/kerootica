@@ -1,12 +1,12 @@
 from app.repositories.parcela_repository import ParcelaRepository
 from app.models.parcela import Parcela
 
-class ParcelaService():
+
+class ParcelaService:
 
     @staticmethod
     def criar_parcela(dados):
-        parcela = Parcela(**dados) 
-
+        parcela = Parcela(**dados)
         return ParcelaRepository.salvar(parcela)
 
     @staticmethod
@@ -15,21 +15,16 @@ class ParcelaService():
 
     @staticmethod
     def buscar_por_id(parcela_id):
-        parcela = ParcelaRepository.buscar_por_id(parcela_id) 
-
-        if not parcela: 
-            raise ValueError("Parcela não existe.") 
-        
-        return parcela
-
-    @staticmethod
-    def buscar_por_venda(venda_id):
-        parcela = ParcelaRepository.buscar_por_venda(venda_id)
+        parcela = ParcelaRepository.buscar_por_id(parcela_id)
 
         if not parcela:
             raise ValueError("Parcela não existe.")
 
         return parcela
+
+    @staticmethod
+    def buscar_por_venda(venda_id):
+        return ParcelaRepository.buscar_por_venda(venda_id)
 
     @staticmethod
     def atualizar_parcela(parcela_id, dados):
@@ -39,14 +34,14 @@ class ParcelaService():
             raise ValueError("Parcela não existe.")
 
         for campo, valor in dados.items():
-                setattr(parcela, campo, valor)
+            setattr(parcela, campo, valor)
 
         return ParcelaRepository.atualizar(parcela)
 
     @staticmethod
     def deletar_parcela(parcela_id):
         parcela = ParcelaRepository.buscar_por_id(parcela_id)
-        
+
         if not parcela:
             raise ValueError("Parcela não existe.")
 

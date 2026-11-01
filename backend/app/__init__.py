@@ -2,6 +2,7 @@ import os
 
 from flask import Flask
 from dotenv import load_dotenv
+from sqlalchemy import text
 
 from app.extensions import db, migrate, ma, jwt
 from app.routes.cliente_routes import cliente_bp
@@ -12,7 +13,6 @@ from app.routes.venda_route import venda_bp
 from app.routes.parcela_route import parcela_bp
 import app.models
 from flasgger import Swagger
-
 
 
 def create_app():
@@ -52,6 +52,16 @@ def create_app():
     migrate.init_app(app, db)
     ma.init_app(app)
     jwt.init_app(app)
+
+    with app.app_context():
+        try:
+            db.session.execute(text("ALTER TYPE forma_pagamento ADD VALUE IF NOT EXISTS 'Promissória'"))
+            db.session.execute(text("ALTER TABLE vendas ADD COLUMN IF NOT EXISTS optometrista VARCHAR(60)"))
+            db.session.execute(text("ALTER TABLE vendas ADD COLUMN IF NOT EXISTS custo_armacao NUMERIC(10, 2)"))
+            db.session.execute(text("ALTER TABLE vendas ADD COLUMN IF NOT EXISTS custo_lentes NUMERIC(10, 2)"))
+            db.session.commit()
+        except Exception:
+            db.session.rollback()
 
     # =========================
     # Rotas

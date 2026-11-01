@@ -53,5 +53,6 @@ class Cliente(db.Model):
 
     vendas = db.relationship(
         "Venda",
-        back_populates="cliente"
+        back_populates="cliente",
+        cascade="all, delete-orphan"
     )

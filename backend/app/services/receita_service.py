@@ -1,14 +1,16 @@
+from app.extensions import db
 from app.models.receita import Receita
 from app.models.receita_olho import ReceitaOlho
 from app.repositories.receita_repository import ReceitaRepository
+
 
 class ReceitaService:
 
     @staticmethod
     def criar_receita(dados):
-
-        olhos = dados.pop("olhos", [])
-        receita = Receita(**dados)
+        dados_rec = dict(dados)
+        olhos = dados_rec.pop("olhos", [])
+        receita = Receita(**dados_rec)
 
         for olho in olhos:
             receita_olho = ReceitaOlho(**olho)
@@ -40,16 +42,29 @@ class ReceitaService:
         if not receita:
             raise ValueError("Receita não encontrada.")
 
-        for campo, valor in dados.items():
+        dados_rec = dict(dados)
+        olhos_dados = dados_rec.pop("olhos", None)
+
+        for campo, valor in dados_rec.items():
             setattr(receita, campo, valor)
+
+        if olhos_dados is not None:
+            receita.olhos.clear()
+            db.session.flush()
+            for olho in olhos_dados:
+                receita.olhos.append(ReceitaOlho(**olho))
 
         return ReceitaRepository.atualizar(receita)
 
     @staticmethod
     def deletar_receita(receita_id):
         receita = ReceitaRepository.buscar_por_id(receita_id)
-        
+
         if not receita:
             raise ValueError("Receita não encontrada.")
 
+        for venda in (receita.vendas or []):
+            venda.receita_id = None
+
+        db.session.flush()
         return ReceitaRepository.deletar(receita)

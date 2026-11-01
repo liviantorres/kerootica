@@ -22,7 +22,7 @@ class Receita(db.Model):
     )
 
     tipo_lente = db.Column(
-        db.String(25), 
+        db.String(25),
     )
 
     tratamento = db.Column(
@@ -67,11 +67,10 @@ class Receita(db.Model):
 
     cliente = db.relationship(
         "Cliente",
-        backref="receitas"
+        backref=db.backref("receitas", cascade="all, delete-orphan")
     )
 
     vendas = db.relationship(
         "Venda",
         back_populates="receita"
     )
-    

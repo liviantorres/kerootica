@@ -40,7 +40,7 @@ class Parcela(db.Model):
     )
 
     forma_de_pagamento = db.Column(
-        db.Enum("PIX", "Cartão de Crédito", "Cartão de Débito", "Dinheiro", name="forma_pagamento")
+        db.Enum("PIX", "Cartão de Crédito", "Cartão de Débito", "Dinheiro", "Promissória", name="forma_pagamento")
     )
 
     venda = db.relationship(

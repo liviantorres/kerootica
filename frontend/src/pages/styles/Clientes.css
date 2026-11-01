@@ -1035,3 +1035,554 @@
         grid-template-columns: 1fr;
     }
 }
+
+
+/* =========================================
+   Botões de Ação nos Cards (Receitas, Compras, Parcelas)
+========================================= */
+.badge-garantia-azul {
+    background-color: #DBEAFE;
+    color: #1E40AF;
+}
+
+.btn-card-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background-color: #FFFFFF;
+    color: #215BA6;
+    border: 1px solid #93C5FD;
+    border-radius: 6px;
+    padding: 5px 11px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.btn-card-outline:hover {
+    background-color: #EFF6FF;
+    border-color: #215BA6;
+}
+
+.btn-card-solid {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background-color: #215BA6;
+    color: #FFFFFF;
+    border: 1px solid #215BA6;
+    border-radius: 6px;
+    padding: 6px 13px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.btn-card-solid:hover {
+    background-color: #174276;
+    border-color: #174276;
+}
+
+.btn-card-success {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background-color: #16A34A;
+    color: #FFFFFF;
+    border: 1px solid #16A34A;
+    border-radius: 6px;
+    padding: 5px 11px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.btn-card-success:hover {
+    background-color: #15803D;
+    border-color: #15803D;
+}
+
+.btn-card-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background-color: #F8FAFC;
+    color: #1E3A5F;
+    border: 1px solid #CBD5E1;
+    border-radius: 6px;
+    padding: 5px 11px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.btn-card-ghost:hover {
+    background-color: #E2E8F0;
+    border-color: #94A3B8;
+}
+
+.btn-card-danger {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background-color: #FFFFFF;
+    color: #DC2626;
+    border: 1px solid #FECACA;
+    border-radius: 6px;
+    padding: 5px 11px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.btn-card-danger:hover {
+    background-color: #FEE2E2;
+    border-color: #FCA5A5;
+}
+
+/* =========================================
+   Botões de Perfil do Cliente (Editar + Excluir)
+========================================= */
+.cliente-perfil-acoes-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+.cliente-perfil-acoes-stack .btn-editar-cadastro {
+    width: 100%;
+}
+
+.btn-excluir-cadastro {
+    width: 100%;
+    background-color: #FFFFFF;
+    color: #DC2626;
+    border: 1px solid #FECACA;
+    border-radius: 6px;
+    padding: 7px 14px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.btn-excluir-cadastro:hover {
+    background-color: #FEE2E2;
+    border-color: #FCA5A5;
+}
+
+/* =========================================
+   Aba de Parcelas: KPI Strip, Filtros e Tabela Moderna
+========================================= */
+.parcelas-toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.parcelas-filter-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.parcela-filter-btn {
+    background-color: #F1F5F9;
+    border: 1px solid #CBD5E1;
+    color: #475569;
+    border-radius: 9999px;
+    padding: 4px 12px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.parcela-filter-btn:hover {
+    background-color: #E2E8F0;
+}
+
+.parcela-filter-btn.active {
+    background-color: #215BA6;
+    border-color: #215BA6;
+    color: #FFFFFF;
+}
+
+.parcela-filter-btn.atraso.active {
+    background-color: #DC2626;
+    border-color: #DC2626;
+    color: #FFFFFF;
+}
+
+.parcelas-kpi-strip {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    width: 100%;
+}
+
+.parcela-kpi-item {
+    background-color: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-left: 4px solid #215BA6;
+    border-radius: 8px;
+    padding: 10px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.parcela-kpi-item.pago {
+    border-left-color: #16A34A;
+}
+
+.parcela-kpi-item.pendente {
+    border-left-color: #D97706;
+}
+
+.parcela-kpi-item.atrasado {
+    border-left-color: #DC2626;
+    background-color: #FEF2F2;
+}
+
+.parcela-kpi-item span {
+    font-size: 0.74rem;
+    font-weight: 700;
+    color: #475569;
+    text-transform: uppercase;
+}
+
+.parcela-kpi-item strong {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #0F172A;
+}
+
+.parcela-kpi-item small {
+    font-size: 0.72rem;
+    color: #64748B;
+}
+
+.parcelas-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+}
+
+.parcelas-modern-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.parcelas-modern-table th {
+    background-color: #F8FAFC;
+    color: #215BA6;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 10px 14px;
+    border-bottom: 1px solid #CBD5E1;
+}
+
+.parcelas-modern-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid #E2E8F0;
+    font-size: 0.85rem;
+    color: #1E293B;
+    vertical-align: middle;
+}
+
+.parcelas-modern-table tr:last-child td {
+    border-bottom: none;
+}
+
+.parcelas-modern-table tr.tr-parcela-paga {
+    background-color: #F0FDF4;
+}
+
+.parcelas-modern-table tr.tr-parcela-vencida {
+    background-color: #FEF2F2;
+}
+
+.parcela-num-cell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.parcela-num-badge {
+    background-color: #0B2B46;
+    color: #FFFFFF;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 4px;
+}
+
+.talao-link-pill {
+    background-color: #EFF6FF;
+    color: #1D4ED8;
+    border: 1px solid #BFDBFE;
+    border-radius: 6px;
+    padding: 3px 9px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.talao-link-pill:hover {
+    background-color: #DBEAFE;
+}
+
+.parcela-data-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.parcela-data-cell small {
+    color: #15803D;
+    font-size: 0.72rem;
+}
+
+.parcela-valor-cell {
+    color: #0F172A;
+    font-size: 0.92rem;
+}
+
+.parcela-table-actions {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+/* =========================================
+   Modais de Receita Óptica e Exclusão em Clientes
+========================================= */
+.modal-cliente-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(15, 23, 42, 0.55);
+    backdrop-filter: blur(2px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+.modal-receita-card {
+    background-color: #FFFFFF;
+    border: 2px solid #215BA6;
+    border-radius: 10px;
+    max-width: 780px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 22px 26px;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.22);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    box-sizing: border-box;
+}
+
+.modal-receita-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 1px solid #CBD5E1;
+    padding-bottom: 10px;
+}
+
+.modal-receita-header h3 {
+    margin: 0;
+    color: #0B2B46;
+    font-size: 1.2rem;
+}
+
+.modal-receita-header p {
+    margin: 3px 0 0 0;
+    color: #64748B;
+    font-size: 0.88rem;
+}
+
+.btn-fechar-modal-rec {
+    background: #F1F5F9;
+    border: 1px solid #CBD5E1;
+    border-radius: 6px;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    color: #475569;
+}
+
+.receita-erro-msg {
+    background-color: #FEE2E2;
+    border-left: 4px solid #DC2626;
+    color: #991B1B;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+}
+
+.modal-receita-form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.rec-row-4 {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.rec-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.rec-field label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #1E3A5F;
+}
+
+.rec-field input {
+    height: 36px;
+    border: 1px solid #CBD5E1;
+    border-radius: 6px;
+    padding: 0 10px;
+    font-size: 0.86rem;
+    color: #1E293B;
+    box-sizing: border-box;
+}
+
+.rec-olhos-box {
+    background-color: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.rec-olhos-header,
+.rec-olhos-row {
+    display: grid;
+    grid-template-columns: 120px repeat(4, minmax(0, 1fr));
+    gap: 10px;
+    align-items: center;
+}
+
+.rec-olhos-header {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #215BA6;
+    border-bottom: 1px solid #E2E8F0;
+    padding-bottom: 4px;
+}
+
+.rec-olho-tag {
+    background-color: #0B2B46;
+    color: #FFFFFF;
+    font-size: 0.76rem;
+    font-weight: 700;
+    padding: 6px 10px;
+    border-radius: 6px;
+    text-align: center;
+}
+
+.rec-olhos-row input {
+    height: 34px;
+    border: 1px solid #CBD5E1;
+    border-radius: 6px;
+    padding: 0 8px;
+    font-size: 0.85rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.modal-receita-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding-top: 8px;
+    border-top: 1px solid #E2E8F0;
+}
+
+.modal-confirm-danger-card {
+    background-color: #FFFFFF;
+    border: 2px solid #DC2626;
+    border-radius: 10px;
+    max-width: 460px;
+    width: 100%;
+    padding: 22px 24px;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.22);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.modal-confirm-danger-card h3 {
+    margin: 0;
+    color: #991B1B;
+    font-size: 1.15rem;
+}
+
+.modal-confirm-danger-card p {
+    margin: 0;
+    color: #1E293B;
+    font-size: 0.92rem;
+}
+
+.modal-confirm-danger-aviso {
+    background-color: #FEF2F2;
+    border: 1px solid #FECACA;
+    color: #991B1B;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+}
+
+.modal-confirm-danger-acoes {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 6px;
+}
+
+.btn-confirm-danger {
+    background-color: #DC2626;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 8px;
+    height: 40px;
+    padding: 0 16px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-confirm-danger:hover:not(:disabled) {
+    background-color: #B91C1C;
+}

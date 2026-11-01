@@ -1,4 +1,4 @@
-// Utilitário para geração e impressão/salvamento em PDF de Ordens de Serviço, Receitas e Recibos da Kero Ótica
+// Utilitário para geração e impressão/salvamento em PDF de Ordens de Serviço, Receitas, Recibos e Folha de Vendas da Kero Ótica
 
 const formatarMoeda = (valor) => {
     const num = Number(valor) || 0;
@@ -30,6 +30,10 @@ const formatarData = (dataStr) => {
     if (clean.length === 8) {
         return `${clean.slice(0, 2)}/${clean.slice(2, 4)}/${clean.slice(4, 8)}`;
     }
+    if (typeof dataStr === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(dataStr.trim())) {
+        const [ano, mes, dia] = dataStr.trim().split('-');
+        return `${dia}/${mes}/${ano}`;
+    }
     const d = new Date(dataStr);
     if (!isNaN(d.getTime())) return d.toLocaleDateString('pt-BR');
     return dataStr;
@@ -49,8 +53,8 @@ const formatarGrau = (val) => {
     return (num > 0 ? `+${num.toFixed(2)}` : num.toFixed(2));
 };
 
-const abrirJanelaImpressaoPDF = (tituloDocumento, conteudoHtml) => {
-    const printWin = window.open('', '_blank', 'width=980,height=860');
+const abrirJanelaImpressaoPDF = (tituloDocumento, conteudoHtml, orientacaoPaisagem = false) => {
+    const printWin = window.open('', '_blank', 'width=1120,height=860');
     if (!printWin) {
         alert('Por favor, permita pop-ups no navegador para visualizar e salvar o PDF.');
         return;
@@ -64,8 +68,8 @@ const abrirJanelaImpressaoPDF = (tituloDocumento, conteudoHtml) => {
     <title>${tituloDocumento}</title>
     <style>
         @page {
-            size: A4;
-            margin: 12mm;
+            size: ${orientacaoPaisagem ? 'A4 landscape' : 'A4'};
+            margin: ${orientacaoPaisagem ? '10mm' : '12mm'};
         }
         * {
             box-sizing: border-box;
@@ -127,10 +131,10 @@ const abrirJanelaImpressaoPDF = (tituloDocumento, conteudoHtml) => {
             cursor: pointer;
         }
         .a4-sheet {
-            max-width: 210mm;
+            max-width: ${orientacaoPaisagem ? '297mm' : '210mm'};
             margin: 20px auto;
             background-color: #FFFFFF;
-            padding: 16mm;
+            padding: ${orientacaoPaisagem ? '12mm' : '16mm'};
             box-shadow: 0 8px 28px rgba(15, 23, 42, 0.15);
             border-radius: 6px;
         }
@@ -245,6 +249,52 @@ const abrirJanelaImpressaoPDF = (tituloDocumento, conteudoHtml) => {
             font-size: 11.5px;
             color: #1E293B;
         }
+        /* Estilos específicos da Folha de Vendas / Planilha de Atendimento */
+        .folha-atendimento-banner {
+            background-color: #0B2B46;
+            color: #FFFFFF;
+            font-size: 14px;
+            font-weight: 800;
+            text-align: center;
+            padding: 8px 12px;
+            border: 1.5px solid #0B2B46;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+        table.folha-vendas-table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1.5px solid #0B2B46;
+        }
+        table.folha-vendas-table th {
+            background-color: #E2E8F0;
+            color: #0F172A;
+            font-size: 9.5px;
+            font-weight: 800;
+            text-transform: uppercase;
+            text-align: center;
+            padding: 6px 5px;
+            border: 1px solid #475569;
+            white-space: nowrap;
+        }
+        table.folha-vendas-table td {
+            padding: 6px 5px;
+            border: 1px solid #64748B;
+            font-size: 10px;
+            color: #0F172A;
+            vertical-align: middle;
+        }
+        table.folha-vendas-table tbody tr:nth-child(even) {
+            background-color: #F8FAFC;
+        }
+        table.folha-vendas-table tfoot td {
+            background-color: #EFF6FF;
+            font-weight: 800;
+            font-size: 10.5px;
+            color: #0B2B46;
+            border: 1.5px solid #0B2B46;
+            padding: 7px 5px;
+        }
         .finance-summary-row {
             display: grid;
             grid-template-columns: repeat(6, 1fr);
@@ -303,6 +353,8 @@ const abrirJanelaImpressaoPDF = (tituloDocumento, conteudoHtml) => {
         @media print {
             body {
                 background-color: #FFFFFF;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
             }
             .no-print-toolbar {
                 display: none !important;
@@ -865,4 +917,137 @@ export function gerarPDFExtratoParcelas(cliente, parcelas = []) {
     `;
 
     abrirJanelaImpressaoPDF(`Extrato_Parcelas_${cliente.nome_completo}`, conteudoHtml);
+}
+
+/**
+ * Gera a Folha de Vendas / Controle de Atendimento e Custos em formato de planilha A4 Paisagem:
+ * Cabeçalho: ATENDIMENTO: DD/MM/AAAA - NOME
+ * Colunas: TALÃO | TITULAR DO ÓCULOS | LENTES | V. LENTES | LABORATÓRIO | ARMAÇÃO | V. ARMAÇÃO | DESCONTO | VALOR | ENTRADA | PRESTAÇÕES | DATA PAGAMENTO
+ */
+export function gerarPDFFolhaDeVendas({
+    dataAtendimento,
+    responsavelAtendimento,
+    linhas = []
+}) {
+    const dataFormatada = dataAtendimento ? formatarData(dataAtendimento) : new Date().toLocaleDateString('pt-BR');
+    const responsavelStr = (responsavelAtendimento || 'KERO ÓTICA').toUpperCase();
+
+    const somaVLentes = linhas.reduce((acc, l) => acc + (Number(l.valor_lentes) || 0), 0);
+    const somaCustoLentes = linhas.reduce((acc, l) => acc + (Number(l.custo_lentes) || 0), 0);
+    const somaVArmacao = linhas.reduce((acc, l) => acc + (Number(l.valor_armacao) || 0), 0);
+    const somaCustoArmacao = linhas.reduce((acc, l) => acc + (Number(l.custo_armacao) || 0), 0);
+    const somaDesconto = linhas.reduce((acc, l) => acc + (Number(l.desconto) || 0), 0);
+    const somaValorTotal = linhas.reduce((acc, l) => acc + (Number(l.valor_total) || 0), 0);
+    const somaEntrada = linhas.reduce((acc, l) => acc + (Number(l.entrada) || 0), 0);
+    const somaPrestacoes = linhas.reduce((acc, l) => acc + (Number(l.saldo_prestacoes) || 0), 0);
+
+    const custoTotalProdutos = somaCustoLentes + somaCustoArmacao;
+    const lucroBrutoFolha = somaValorTotal - custoTotalProdutos;
+
+    const conteudoHtml = `
+        <div class="doc-header" style="margin-bottom: 10px; padding-bottom: 8px;">
+            <div>
+                <h1 class="brand-title" style="font-size: 20px;">kero<span>ótica</span></h1>
+                <div class="brand-sub">Folha de Controle de Vendas, Custos de Produtos e Recebimentos</div>
+            </div>
+            <div class="doc-meta">
+                <div><strong>Registros na Folha:</strong> ${linhas.length} venda(s)</div>
+                <div><strong>Emitido em:</strong> ${new Date().toLocaleDateString('pt-BR')}</div>
+            </div>
+        </div>
+
+        <div class="folha-atendimento-banner">
+            ATENDIMENTO: ${dataFormatada} - ${responsavelStr}
+        </div>
+
+        <table class="folha-vendas-table">
+            <thead>
+                <tr>
+                    <th>TALÃO</th>
+                    <th>TITULAR DO ÓCULOS</th>
+                    <th>OPTOMETRISTA</th>
+                    <th>LENTES</th>
+                    <th>V. LENTES</th>
+                    <th>CUSTO LENTES</th>
+                    <th>LABORATÓRIO</th>
+                    <th>ARMAÇÃO</th>
+                    <th>V. ARMAÇÃO</th>
+                    <th>CUSTO ARMAÇÃO</th>
+                    <th>DESCONTO</th>
+                    <th>VALOR PAGO</th>
+                    <th>ENTRADA</th>
+                    <th>PRESTAÇÕES</th>
+                    <th>DATA PAGAMENTO</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${linhas.length === 0 ? `
+                    <tr>
+                        <td colspan="15" style="text-align: center; padding: 18px;">
+                            Nenhuma venda selecionada para esta folha de atendimento.
+                        </td>
+                    </tr>
+                ` : linhas.map(item => `
+                    <tr>
+                        <td style="text-align: center; font-weight: 800;">${item.talao}</td>
+                        <td style="font-weight: 700;">${item.titular}</td>
+                        <td style="text-align: center; font-weight: 600;">${item.optometrista || '-'}</td>
+                        <td>${item.lentes || '-'}</td>
+                        <td style="text-align: right; white-space: nowrap;">${formatarMoeda(item.valor_lentes)}</td>
+                        <td style="text-align: right; white-space: nowrap; color: #991B1B; font-weight: 600;">${formatarMoeda(item.custo_lentes)}</td>
+                        <td style="text-align: center;">${item.laboratorio || '-'}</td>
+                        <td>${item.armacao || '-'}</td>
+                        <td style="text-align: right; white-space: nowrap;">${formatarMoeda(item.valor_armacao)}</td>
+                        <td style="text-align: right; white-space: nowrap; color: #991B1B; font-weight: 600;">${formatarMoeda(item.custo_armacao)}</td>
+                        <td style="text-align: right; white-space: nowrap;">${Number(item.desconto) > 0 ? formatarMoeda(item.desconto) : '-'}</td>
+                        <td style="text-align: right; font-weight: 800; white-space: nowrap; color: #0B2B46;">${formatarMoeda(item.valor_total)}</td>
+                        <td style="text-align: right; white-space: nowrap;">${Number(item.entrada) > 0 ? formatarMoeda(item.entrada) : '-'}</td>
+                        <td style="text-align: center; white-space: nowrap;">${item.prestacoes_texto || '-'}</td>
+                        <td style="text-align: center; white-space: nowrap;">${item.data_pagamento_texto || '-'}</td>
+                    </tr>
+                `).join('')}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="4" style="text-align: right;">TOTAIS DA FOLHA (${linhas.length} vendas):</td>
+                    <td style="text-align: right; white-space: nowrap;">${formatarMoeda(somaVLentes)}</td>
+                    <td style="text-align: right; white-space: nowrap; color: #991B1B;">${formatarMoeda(somaCustoLentes)}</td>
+                    <td></td>
+                    <td></td>
+                    <td style="text-align: right; white-space: nowrap;">${formatarMoeda(somaVArmacao)}</td>
+                    <td style="text-align: right; white-space: nowrap; color: #991B1B;">${formatarMoeda(somaCustoArmacao)}</td>
+                    <td style="text-align: right; white-space: nowrap;">${formatarMoeda(somaDesconto)}</td>
+                    <td style="text-align: right; white-space: nowrap;">${formatarMoeda(somaValorTotal)}</td>
+                    <td style="text-align: right; white-space: nowrap;">${formatarMoeda(somaEntrada)}</td>
+                    <td style="text-align: center; white-space: nowrap;">Saldo: ${formatarMoeda(somaPrestacoes)}</td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <div class="fin-strip" style="margin-top: 10px;">
+            <div class="fin-card total">
+                <div class="fin-label">Total Pago pelos Clientes</div>
+                <div class="fin-val">${formatarMoeda(somaValorTotal)}</div>
+            </div>
+            <div class="fin-card pendente">
+                <div class="fin-label">Custo Total (Lentes + Armações)</div>
+                <div class="fin-val">${formatarMoeda(custoTotalProdutos)}</div>
+            </div>
+            <div class="fin-card">
+                <div class="fin-label">Entradas Recebidas no Ato</div>
+                <div class="fin-val">${formatarMoeda(somaEntrada)}</div>
+            </div>
+            <div class="fin-card pago">
+                <div class="fin-label">Resultado / Margem Líquida</div>
+                <div class="fin-val">${formatarMoeda(lucroBrutoFolha)}</div>
+            </div>
+        </div>
+    `;
+
+    abrirJanelaImpressaoPDF(
+        `Folha_Vendas_${dataFormatada.replace(/\//g, '-')}_${responsavelStr.replace(/\s+/g, '_')}`,
+        conteudoHtml,
+        true
+    );
 }

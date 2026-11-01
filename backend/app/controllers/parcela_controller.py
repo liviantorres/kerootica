@@ -1,13 +1,15 @@
 from flask import jsonify, request
 from marshmallow import ValidationError
 
+from app.extensions import db
 from app.schemas.parcela_schema import ParcelaSchema
 from app.services.parcela_service import ParcelaService
 
 parcela_schema = ParcelaSchema()
 parcelas_schema = ParcelaSchema(many=True)
 
-class ParcelaController():
+
+class ParcelaController:
 
     @staticmethod
     def criar():
@@ -16,27 +18,34 @@ class ParcelaController():
             parcela = ParcelaService.criar_parcela(dados)
 
             return jsonify(
-                    parcela_schema.dump(parcela)
+                parcela_schema.dump(parcela)
             ), 201
 
         except ValidationError as err:
-                return jsonify({
-                        "erro": "Dados inválidos",
-                        "detalhes": err.messages
-                }), 400
+            return jsonify({
+                "erro": "Dados inválidos",
+                "detalhes": err.messages
+            }), 400
 
         except ValueError as err:
-                return jsonify({
-                    "erro": str(err)
-                }), 404
+            return jsonify({
+                "erro": str(err)
+            }), 404
+
+        except Exception as err:
+            db.session.rollback()
+            return jsonify({
+                "erro": "Erro interno ao criar a parcela.",
+                "detalhes": str(err)
+            }), 500
 
     @staticmethod
     def listar():
         parcelas = ParcelaService.listar_parcelas()
 
         return jsonify(
-                parcelas_schema.dump(parcelas)
-            ), 200
+            parcelas_schema.dump(parcelas)
+        ), 200
 
     @staticmethod
     def buscar_por_id(parcela_id):
@@ -48,49 +57,48 @@ class ParcelaController():
             ), 200
 
         except ValueError as err:
-             return jsonify({
-                  "erro": str(err)
-             }), 404
+            return jsonify({
+                "erro": str(err)
+            }), 404
 
     @staticmethod
     def buscar_por_venda(venda_id):
-        try:
-            parcelas = ParcelaService.buscar_por_venda(venda_id)
+        parcelas = ParcelaService.buscar_por_venda(venda_id)
 
-            return jsonify(
-                 parcelas_schema.dump(parcelas)
-            ), 200
-
-        except ValueError as err:
-             return jsonify({
-                  "erro": str(err)
-             }), 404
+        return jsonify(
+            parcelas_schema.dump(parcelas)
+        ), 200
 
     @staticmethod
     def atualizar_parcela(parcela_id):
-        try: 
-
+        try:
             dados = parcela_schema.load(
-                            request.get_json(), 
-                            partial=True
+                request.get_json(),
+                partial=True
+            )
 
-                )
-            
             parcela = ParcelaService.atualizar_parcela(parcela_id, dados)
             return jsonify(
-                            parcela_schema.dump(parcela)
-                        ), 200
+                parcela_schema.dump(parcela)
+            ), 200
 
         except ValidationError as err:
-             return jsonify({
-                  "erro": "Dados inválidos",
-                  "detalhes": err.messages
-             }),400
+            return jsonify({
+                "erro": "Dados inválidos",
+                "detalhes": err.messages
+            }), 400
 
         except ValueError as err:
-             return jsonify({
-                  "erro": str(err)
-             }), 404
+            return jsonify({
+                "erro": str(err)
+            }), 404
+
+        except Exception as err:
+            db.session.rollback()
+            return jsonify({
+                "erro": "Erro interno ao atualizar a parcela.",
+                "detalhes": str(err)
+            }), 500
 
     @staticmethod
     def deletar(parcela_id):
@@ -98,14 +106,17 @@ class ParcelaController():
             ParcelaService.deletar_parcela(parcela_id)
 
             return jsonify({
-                        "mensagem": "Parcela excluída com sucesso."
-                    }), 200
-        
+                "mensagem": "Parcela excluída com sucesso."
+            }), 200
+
         except ValueError as err:
             return jsonify({
                 "erro": str(err)
             }), 404
 
-
-         
-              
+        except Exception as err:
+            db.session.rollback()
+            return jsonify({
+                "erro": "Erro interno ao excluir a parcela.",
+                "detalhes": str(err)
+            }), 500

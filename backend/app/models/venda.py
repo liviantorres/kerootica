@@ -34,6 +34,11 @@ class Venda(db.Model):
         nullable=False
     )
 
+    optometrista = db.Column(
+        db.String(60),
+        nullable=True
+    )
+
     data_venda = db.Column(
         db.DateTime,
         default=datetime.utcnow,
@@ -61,6 +66,16 @@ class Venda(db.Model):
     )
 
     valor_lentes = db.Column(
+        db.Numeric(10, 2),
+        nullable=True
+    )
+
+    custo_armacao = db.Column(
+        db.Numeric(10, 2),
+        nullable=True
+    )
+
+    custo_lentes = db.Column(
         db.Numeric(10, 2),
         nullable=True
     )
@@ -104,5 +119,6 @@ class Venda(db.Model):
 
     parcelas = db.relationship(
         "Parcela",
-        back_populates="venda"
+        back_populates="venda",
+        cascade="all, delete-orphan"
     )

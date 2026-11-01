@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './styles/ModalDetalheCompra.css';
 
-const FORMAS_PAGAMENTO = ['PIX', 'Cartão de Crédito', 'Cartão de Débito', 'Dinheiro'];
+const FORMAS_PAGAMENTO = ['PIX', 'Cartão de Crédito', 'Cartão de Débito', 'Dinheiro', 'Promissória'];
 
 export function ModalDetalheCompra({
     isOpen,
