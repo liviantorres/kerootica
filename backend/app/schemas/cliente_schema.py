@@ -1,7 +1,9 @@
-from marshmallow import Schema, fields, validate
+from marshmallow import Schema, fields, validate, EXCLUDE
 
 
 class ClienteSchema(Schema):
+    class Meta:
+        unknown = EXCLUDE
 
     id = fields.Int(
         dump_only=True
@@ -22,6 +24,18 @@ class ClienteSchema(Schema):
         validate=validate.Length(equal=11)
     )
 
+    rg = fields.Str(
+        required=False,
+        allow_none=True,
+        validate=validate.Length(max=30)
+    )
+
+    data_nascimento = fields.Str(
+        required=False,
+        allow_none=True,
+        validate=validate.Length(max=20)
+    )
+
     telefone1 = fields.Str(
         required=False,
         allow_none=True,
@@ -32,6 +46,11 @@ class ClienteSchema(Schema):
         required=False,
         allow_none=True,
         validate=validate.Length(max=20)
+    )
+
+    email = fields.Email(
+        required=False,
+        allow_none=True
     )
 
     nome_mae = fields.Str(
@@ -46,21 +65,26 @@ class ClienteSchema(Schema):
         validate=validate.Length(max=200)
     )
 
+    endereco = fields.Str(
+        required=False,
+        allow_none=True,
+        validate=validate.Length(max=150)
+    )
+
     referencia = fields.Str(
         required=False,
         allow_none=True,
         validate=validate.Length(max=150)
     )
 
-    email = fields.Email(
+    cn = fields.Bool(
         required=False,
-        allow_none=True
+        load_default=False
     )
 
-    endereco = fields.Str(
+    ca = fields.Bool(
         required=False,
-        allow_none=True,
-        validate=validate.Length(max=150)
+        load_default=False
     )
 
     data_cadastro = fields.DateTime(

@@ -22,13 +22,16 @@ class ParcelaSchema(Schema):
     )
 
     data_pagamento = fields.DateTime(
+        required=False,
         allow_none=True
     )
 
     status = fields.String(
-        dump_only=True
+        required=False,
+        load_default="Pendente"
     )
 
     forma_de_pagamento = fields.String(
+        required=False,
         allow_none=True
     )

@@ -7,6 +7,7 @@ import userIcon from '../assets/icons/user.svg';
 import lockIcon from '../assets/icons/pass.svg';
 import '../pages/styles/Login.css';
 import { loginRequest } from "../services/authService.js";
+import { useAuth } from "../contexts/AuthContext.jsx";
 
 const UserIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="#0A2846">
@@ -25,6 +26,7 @@ export default function Login() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    const { login } = useAuth();
     const navigate = useNavigate();
 
     async function handleSubmit(evento){
@@ -34,14 +36,11 @@ export default function Login() {
 
         try {
             const dados = await loginRequest(email, password);
-            
-            // Salva o token retornado pelo backend (ajuste a propriedade se necessário, ex: dados.access_token)
-            localStorage.setItem('token', dados.token); 
-            
-            // Redireciona para a home mapeada no App.jsx
-            navigate('/home'); 
+            login(dados);
+            navigate('/home', { replace: true }); 
         } catch (erro) {
-            setError('Credenciais inválidas.');
+            const mensagem = erro.response?.data?.erro || (erro.response ? 'Credenciais inválidas.' : 'Erro ao conectar com o servidor.');
+            setError(mensagem);
         } finally {
             setLoading(false);
         }

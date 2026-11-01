@@ -41,7 +41,7 @@ class ParcelaService():
         for campo, valor in dados.items():
                 setattr(parcela, campo, valor)
 
-        return ParcelaRepository.atualizar(dados)
+        return ParcelaRepository.atualizar(parcela)
 
     @staticmethod
     def deletar_parcela(parcela_id):

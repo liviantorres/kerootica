@@ -9,11 +9,11 @@ class ReceitaSchema(Schema):
 
     cliente_id = fields.Int(required=True, allow_none=False)
     
-    optometrista = fields.Str(required=False)
+    optometrista = fields.Str(required=False, allow_none=True)
     
-    tipo_lente = fields.Str(required=False)
+    tipo_lente = fields.Str(required=False, allow_none=True)
     
-    tratamento = fields.Str(required=False)
+    tratamento = fields.Str(required=False, allow_none=True)
     
     ceratometria_od = fields.Str(required=False, allow_none=True)
 
@@ -30,7 +30,7 @@ class ReceitaSchema(Schema):
     data_receita = fields.DateTime(dump_only=True)
     
     olhos = fields.Nested(
-            ReceitaOlhoSchema,
-            many=True,
-            required=True
-        )
+        ReceitaOlhoSchema,
+        many=True,
+        required=True
+    )

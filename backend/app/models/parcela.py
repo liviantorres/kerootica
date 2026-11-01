@@ -17,7 +17,7 @@ class Parcela(db.Model):
 
     numero_parcela = db.Column(
         db.Integer,
-        nullabel=False
+        nullable=False
     )
 
     valor = db.Column(
@@ -43,7 +43,7 @@ class Parcela(db.Model):
         db.Enum("PIX", "Cartão de Crédito", "Cartão de Débito", "Dinheiro", name="forma_pagamento")
     )
 
-    vendas = db.relationship(
+    venda = db.relationship(
         "Venda",
         back_populates="parcelas"
     )

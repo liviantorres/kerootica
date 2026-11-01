@@ -1,15 +1,15 @@
 /* O contêiner pai tira margens internas para que as cores encostem nas bordas */
 .app-header {
     display: flex;
-    height: 80px;
+    height: 60px;
     width: 100%;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
     z-index: 10;
 }
 
 /* O lado da logo: Fundo azul escuro e largura fixa para alinhar com o futuro menu */
 .header-left-blue {
-    width: 450px;
+    width: 350px;
     background-color: #0B2B46;
     display: flex;
     justify-content: center;
@@ -22,40 +22,59 @@
     background-color: #FFFFFF;
     display: flex;
     align-items: center;
-    padding: 0 2rem;
-    color: #333;
-}
-
-.logo-img {
-    width: 300px;
-    height: auto;
-    margin-top: 10px;
-}
-
-/* Atualize o contêiner branco para separar o título do perfil */
-.header-right-white {
-    flex: 1;
-    background-color: #FFFFFF;
-    display: flex;
-    align-items: center;
-    justify-content: space-between; /* Essa é a mágica que afasta os itens */
+    justify-content: space-between;
     padding: 0 2rem;
     color: #1E293B;
 }
 
+.logo-img {
+    height: 90px;
+    margin-top: 18px;
+    width: auto;
+    object-fit: contain;
+    display: block;
+}
+
+.page-title h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #0F172A;
+}
+
 /* Alinhamento da área do usuário */
+.user-profile-wrapper {
+    position: relative;
+    margin-right: 50px;
+}
+
 .user-profile {
     display: flex;
     align-items: center;
     gap: 12px; /* Cria o espaço entre a bolinha e o texto */
     cursor: pointer;
-    margin-right: 50px;
+    user-select: none;
+    padding: 6px 10px;
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
+}
+
+.user-profile:hover {
+    background-color: #F1F5F9;
+}
+
+.dropdown-icon {
+    transition: transform 0.2s ease;
+}
+
+.dropdown-icon.open {
+    transform: rotate(180deg);
 }
 
 /* Bolinha do Avatar */
 .avatar-placeholder {
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
     background-color: #0B2B46;
     color: white;
@@ -63,6 +82,7 @@
     justify-content: center;
     align-items: center;
     font-weight: bold;
+    font-size: 0.85rem;
 }
 
 /* Empilha o nome e o cargo */
@@ -79,4 +99,73 @@
 .user-role {
     font-size: 0.75rem;
     color: #64748B;
+}
+
+/* Menu Dropdown */
+.user-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    background: #FFFFFF;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    border: 1px solid #E2E8F0;
+    border-radius: 10px;
+    min-width: 200px;
+    padding: 12px;
+    z-index: 1000;
+    animation: fadeIn 0.15s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dropdown-user-header {
+    padding: 4px 6px;
+}
+
+.dropdown-user-name {
+    margin: 0;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #0F172A;
+}
+
+.dropdown-user-role {
+    font-size: 0.75rem;
+    color: #64748B;
+    text-transform: capitalize;
+}
+
+.dropdown-divider {
+    border: none;
+    border-top: 1px solid #E2E8F0;
+    margin: 10px 0;
+}
+
+.dropdown-logout-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    color: #DC2626;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.dropdown-logout-btn:hover {
+    background-color: #FEE2E2;
 }

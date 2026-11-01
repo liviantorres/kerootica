@@ -1,24 +1,26 @@
 import { Outlet, useLocation } from 'react-router-dom';
 import { Header } from './Header';
 import { Sidebar } from './Sidebar';
+import { useAuth } from '../contexts/AuthContext';
 import '../assets/styles/layout.css';
 
 export function MainLayout() {
     const location = useLocation();
+    const { usuario } = useAuth();
     
     // Mapeia a URL atual para o título da tela
     const pageTitles = {
         '/home': 'Página Inicial',
         '/clientes': 'Gestão de Clientes',
+        '/vendas': 'Gestão de Vendas',
         '/caixa': 'Gestão de Caixa',
         '/relatorios': 'Relatórios'
     };
     
     const currentTitle = pageTitles[location.pathname] || 'Página Inicial';
 
-    // No futuro, esses dados virão do seu hook useAuth ou Contexto
-    const userName = "Keroótica"; 
-    const userRole = "Administrador";
+    const userName = usuario?.nome || "Usuário"; 
+    const userRole = usuario?.perfil === "admin" ? "Administrador" : (usuario?.perfil || "Funcionário");
 
     return (
         <div className="app-container">

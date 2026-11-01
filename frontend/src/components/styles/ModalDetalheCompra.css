@@ -1,0 +1,611 @@
+.modal-compra-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(2px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.modal-compra-container {
+    width: 100%;
+    max-width: 1120px;
+    max-height: 92vh;
+    background-color: #FFFFFF;
+    border-radius: 12px;
+    border: 2px solid #215BA6;
+    box-shadow: 0 20px 50px rgba(15, 23, 42, 0.28);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* =========================================
+   Cabeçalho do Modal de Compra
+======================================== */
+.modal-compra-header {
+    background: linear-gradient(135deg, #0B2B46 0%, #16436F 100%);
+    color: #FFFFFF;
+    padding: 20px 26px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.modal-compra-titulo-bloco {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.modal-compra-top-badges {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 2px;
+}
+
+.os-talao-badge {
+    background-color: #FACC15;
+    color: #0F172A;
+    font-size: 0.78rem;
+    font-weight: 800;
+    padding: 3px 10px;
+    border-radius: 6px;
+    letter-spacing: 0.03em;
+}
+
+.os-codigo-badge {
+    background-color: rgba(255, 255, 255, 0.14);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #E2E8F0;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-family: monospace;
+}
+
+.os-status-badge {
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 9999px;
+}
+
+.os-status-badge.quitada {
+    background-color: #DCFCE7;
+    color: #15803D;
+}
+
+.os-status-badge.aberta {
+    background-color: #FEF3C7;
+    color: #B45309;
+}
+
+.os-status-badge.atrasada {
+    background-color: #FEE2E2;
+    color: #B91C1C;
+}
+
+.os-garantia-badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 9999px;
+}
+
+.os-garantia-badge.ativa {
+    background-color: #DBEAFE;
+    color: #1D4ED8;
+}
+
+.os-garantia-badge.expirada {
+    background-color: rgba(255, 255, 255, 0.15);
+    color: #CBD5E1;
+}
+
+.modal-compra-titulo-bloco h2 {
+    margin: 0;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #FFFFFF;
+}
+
+.modal-compra-titulo-bloco p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #CBD5E1;
+}
+
+.modal-compra-titulo-bloco p strong {
+    color: #FFFFFF;
+}
+
+.modal-compra-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.btn-os-pdf {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background-color: #215BA6;
+    color: #FFFFFF;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 7px;
+    padding: 9px 15px;
+    font-size: 0.84rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-os-pdf:hover {
+    background-color: #174276;
+}
+
+.btn-os-quitar-tudo {
+    background-color: #16A34A;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 7px;
+    padding: 9px 15px;
+    font-size: 0.84rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.btn-os-quitar-tudo:hover:not(:disabled) {
+    background-color: #15803D;
+}
+
+.btn-os-quitar-tudo:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+.btn-os-fechar {
+    background: rgba(255, 255, 255, 0.12);
+    color: #FFFFFF;
+    border: none;
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease;
+}
+
+.btn-os-fechar:hover {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+/* =========================================
+   Corpo Rolável do Modal
+======================================== */
+.modal-compra-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 26px;
+    background-color: #F8FAFC;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.os-section-card {
+    background-color: #FFFFFF;
+    border: 1px solid #CBD5E1;
+    border-radius: 10px;
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.os-financeiro-destaque {
+    border-left: 4px solid #215BA6;
+}
+
+.os-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #E2E8F0;
+}
+
+.os-section-header h3 {
+    margin: 0;
+    font-size: 0.96rem;
+    font-weight: 700;
+    color: #0B2B46;
+}
+
+.os-progresso-texto {
+    font-size: 0.82rem;
+    color: #475569;
+}
+
+.os-progresso-texto strong {
+    color: #215BA6;
+}
+
+/* Barra de progresso financeiro */
+.os-progress-bar-bg {
+    width: 100%;
+    height: 10px;
+    background-color: #E2E8F0;
+    border-radius: 9999px;
+    overflow: hidden;
+}
+
+.os-progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #215BA6 0%, #3B82F6 100%);
+    border-radius: 9999px;
+    transition: width 0.35s ease;
+}
+
+.os-progress-bar-fill.completa {
+    background: linear-gradient(90deg, #16A34A 0%, #22C55E 100%);
+}
+
+/* Grid de métricas financeiras */
+.os-metricas-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+}
+
+.os-metrica-box {
+    background-color: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.os-metrica-box span {
+    font-size: 0.74rem;
+    font-weight: 600;
+    color: #64748B;
+    text-transform: uppercase;
+}
+
+.os-metrica-box strong {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #0F172A;
+}
+
+.os-metrica-box small {
+    font-size: 0.7rem;
+    color: #94A3B8;
+}
+
+.os-metrica-box.desconto strong {
+    color: #D97706;
+}
+
+.os-metrica-box.total {
+    background-color: #EFF6FF;
+    border-color: #BFDBFE;
+}
+
+.os-metrica-box.total strong {
+    color: #1D4ED8;
+}
+
+.os-metrica-box.quitado {
+    background-color: #F0FDF4;
+    border-color: #BBF7D0;
+}
+
+.os-metrica-box.quitado strong {
+    color: #15803D;
+}
+
+.os-metrica-box.saldo.pendente {
+    background-color: #FEF2F2;
+    border-color: #FECACA;
+}
+
+.os-metrica-box.saldo.pendente strong {
+    color: #DC2626;
+}
+
+.os-metrica-box.saldo.zerado strong {
+    color: #15803D;
+}
+
+/* Duas colunas para Cliente + Produtos */
+.os-two-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+.os-tag-ficha {
+    background-color: #EFF6FF;
+    color: #215BA6;
+    border: 1px solid #BFDBFE;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 2px 10px;
+    border-radius: 9999px;
+}
+
+.os-tag-receita {
+    background-color: #DCFCE7;
+    color: #15803D;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 2px 10px;
+    border-radius: 9999px;
+}
+
+.os-tag-sem-receita {
+    background-color: #F1F5F9;
+    color: #64748B;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 2px 10px;
+    border-radius: 9999px;
+}
+
+.os-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 16px;
+}
+
+.os-info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.os-info-item.full {
+    grid-column: span 2;
+}
+
+.os-info-item span {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #215BA6;
+}
+
+.os-info-item strong {
+    font-size: 0.86rem;
+    font-weight: 600;
+    color: #1E293B;
+}
+
+/* Tabelas técnicas (Produtos, Dioptrias e Parcelas) */
+.os-produtos-table,
+.os-dioptria-table,
+.os-parcelas-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.84rem;
+}
+
+.os-produtos-table th,
+.os-dioptria-table th,
+.os-parcelas-table th {
+    background-color: #F1F5F9;
+    color: #334155;
+    font-weight: 700;
+    text-align: left;
+    padding: 9px 12px;
+    border-bottom: 1px solid #CBD5E1;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+}
+
+.os-produtos-table td,
+.os-dioptria-table td,
+.os-parcelas-table td {
+    padding: 9px 12px;
+    border-bottom: 1px solid #E2E8F0;
+    color: #1E293B;
+}
+
+.os-receita-meta-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px 16px;
+    background-color: #F8FAFC;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #E2E8F0;
+}
+
+.os-receita-obs {
+    background-color: #FFFBEB;
+    border: 1px solid #FDE68A;
+    color: #92400E;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 0.83rem;
+}
+
+.os-empty-text {
+    color: #64748B;
+    font-size: 0.86rem;
+    margin: 4px 0;
+}
+
+.os-pagamento-avista-banner {
+    background-color: #F0FDF4;
+    border: 1px solid #BBF7D0;
+    color: #15803D;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-weight: 600;
+}
+
+.os-parcelas-table-wrapper {
+    overflow-x: auto;
+}
+
+.os-parcelas-table tr.row-paga {
+    background-color: #F8FAFC;
+}
+
+.os-parcelas-table tr.row-vencida {
+    background-color: #FEF2F2;
+}
+
+.os-select-forma {
+    border: 1px solid #CBD5E1;
+    border-radius: 6px;
+    padding: 5px 8px;
+    font-size: 0.8rem;
+    color: #1E293B;
+    background-color: #FFFFFF;
+    outline: none;
+}
+
+.os-select-forma:focus {
+    border-color: #215BA6;
+}
+
+.os-parcela-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.btn-validar-parcela {
+    background-color: #16A34A;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.btn-validar-parcela:hover:not(:disabled) {
+    background-color: #15803D;
+}
+
+.btn-recibo-parcela {
+    background-color: #EFF6FF;
+    color: #215BA6;
+    border: 1px solid #BFDBFE;
+    border-radius: 6px;
+    padding: 5px 10px;
+    font-size: 0.76rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.btn-recibo-parcela:hover {
+    background-color: #DBEAFE;
+}
+
+.btn-reabrir-parcela {
+    background-color: transparent;
+    color: #64748B;
+    border: 1px solid #CBD5E1;
+    border-radius: 6px;
+    padding: 5px 10px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.btn-reabrir-parcela:hover {
+    background-color: #F1F5F9;
+    color: #DC2626;
+    border-color: #FCA5A5;
+}
+
+/* Rodapé do Modal */
+.modal-compra-footer {
+    background-color: #FFFFFF;
+    border-top: 1px solid #CBD5E1;
+    padding: 14px 26px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.modal-compra-footer-left {
+    font-size: 0.8rem;
+    color: #64748B;
+}
+
+.modal-compra-footer-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-os-fechar-texto {
+    background-color: #F1F5F9;
+    color: #334155;
+    border: 1px solid #CBD5E1;
+    border-radius: 7px;
+    padding: 9px 18px;
+    font-size: 0.84rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-os-fechar-texto:hover {
+    background-color: #E2E8F0;
+}
+
+@media (max-width: 980px) {
+    .os-metricas-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .os-two-columns {
+        grid-template-columns: 1fr;
+    }
+
+    .os-receita-meta-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .os-metricas-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+

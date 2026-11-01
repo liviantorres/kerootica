@@ -1,11 +1,13 @@
 import { useState } from 'react';
-import { NavLink } from 'react-router-dom'; // Troque Link por NavLink
+import { NavLink } from 'react-router-dom';
 import oculosIcon from '../assets/icons/oculos.svg';
 
 import casaBranca from '../assets/icons/casa_branca.svg';
 import casaAzul from '../assets/icons/casa_azul.svg';
 import clienteBranca from '../assets/icons/cliente_branco.svg';
 import clienteAzul from '../assets/icons/cliente_azul.svg';
+import vendaBranca from '../assets/icons/venda_branca.svg';
+import vendaAzul from '../assets/icons/venda_azul.svg';
 import caixaBranca from '../assets/icons/caixa_branca.svg';
 import caixaAzul from '../assets/icons/caixa_azul.svg';
 import relatorioBranco from '../assets/icons/relatorio_branco.svg';
@@ -54,6 +56,19 @@ export function Sidebar() {
                     )}
                 </NavLink>
 
+                <NavLink to="/vendas" className={({ isActive }) => isActive ? "nav-item active" : "nav-item"}>
+                    {({ isActive }) => (
+                        <>
+                            <img 
+                                src={isActive ? vendaBranca : vendaAzul} 
+                                alt="Vendas" 
+                                className="nav-icon" 
+                            />
+                            {isOpen && <span className="nav-text">Vendas</span>}
+                        </>
+                    )}
+                </NavLink>
+
                 <NavLink to="/caixa" className={({ isActive }) => isActive ? "nav-item active" : "nav-item"}>
                     {({ isActive }) => (
                         <>
@@ -80,7 +95,6 @@ export function Sidebar() {
                     )}
                 </NavLink>
 
-                
             </nav>
         </aside>
     );

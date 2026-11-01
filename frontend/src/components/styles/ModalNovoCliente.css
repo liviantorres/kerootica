@@ -1,0 +1,256 @@
+/* Fundo escuro atrás do modal */
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(15, 23, 42, 0.45);
+    backdrop-filter: blur(2px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+/* Cartão do Modal com a moldura azul exata do Figma - compacto e largo para caber sem rolagem */
+.modal-card {
+    background: #FFFFFF;
+    border: 3.5px solid #007CC3;
+    border-radius: 8px;
+    width: 95%;
+    max-width: 1080px;
+    padding: 22px 32px 18px 32px;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.2);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    animation: modalFadeIn 0.2s ease-out;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.97);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Header */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+}
+
+.modal-title-wrapper {
+    flex: 1;
+}
+
+.modal-title-wrapper h2 {
+    font-size: 1.45rem;
+    font-weight: 700;
+    color: #164871;
+    margin: 0 0 6px 0;
+    letter-spacing: -0.01em;
+}
+
+.modal-title-line {
+    width: 75%;
+    height: 1px;
+    background-color: #E2E8F0;
+}
+
+.modal-close-btn {
+    background: transparent;
+    border: none;
+    font-size: 1.35rem;
+    line-height: 1;
+    color: #334155;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 4px;
+    transition: all 0.15s ease;
+}
+
+.modal-close-btn:hover {
+    color: #DC2626;
+    background-color: #FEE2E2;
+}
+
+/* Alerta de erro */
+.modal-error-alert {
+    background-color: #FEE2E2;
+    border-left: 4px solid #DC2626;
+    color: #991B1B;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    margin-bottom: 10px;
+}
+
+/* Formulário organizado em 4 linhas eficientes */
+.modal-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.form-group label {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #164871;
+}
+
+.form-group input {
+    height: 36px;
+    border: 1px solid #7DD3FC;
+    border-radius: 6px;
+    padding: 0 12px;
+    font-size: 0.88rem;
+    color: #1E293B;
+    outline: none;
+    transition: all 0.2s ease;
+    background-color: #FFFFFF;
+    box-sizing: border-box;
+}
+
+.form-group input::placeholder {
+    color: #94A3B8;
+    font-weight: 400;
+}
+
+.form-group input:focus {
+    border-color: #007CC3;
+    box-shadow: 0 0 0 3px rgba(0, 124, 195, 0.15);
+}
+
+/* Linhas com múltiplas colunas */
+.form-row-line1 {
+    display: grid;
+    grid-template-columns: 1.8fr 1fr 1fr 1fr;
+    gap: 14px;
+}
+
+.form-row-line2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1.4fr 1fr;
+    gap: 14px;
+}
+
+.form-row-line3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.form-row-line4 {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 14px;
+}
+
+@media (max-width: 768px) {
+    .form-row-line1,
+    .form-row-line2,
+    .form-row-line3,
+    .form-row-line4 {
+        grid-template-columns: 1fr;
+    }
+    
+    .modal-card {
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+}
+
+/* Rodapé: C. N., C. A. e Botão Salvar */
+.modal-footer-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 6px;
+    padding-top: 4px;
+}
+
+.checkboxes-group {
+    display: flex;
+    gap: 20px;
+}
+
+.custom-checkbox-label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #164871;
+    cursor: pointer;
+}
+
+.custom-square-checkbox {
+    width: 28px;
+    height: 28px;
+    border: 1.5px solid #94A3B8;
+    border-radius: 4px;
+    appearance: none;
+    -webkit-appearance: none;
+    background-color: #FFFFFF;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    margin: 0;
+}
+
+.custom-square-checkbox:hover {
+    border-color: #007CC3;
+}
+
+.custom-square-checkbox:checked {
+    background-color: #007CC3;
+    border-color: #007CC3;
+}
+
+.custom-square-checkbox:checked::after {
+    content: '✓';
+    color: #FFFFFF;
+    font-size: 1.05rem;
+    font-weight: bold;
+}
+
+/* Botão Salvar Dados */
+.btn-salvar-dados {
+    background-color: #195A8D;
+    color: #FFFFFF;
+    font-size: 0.95rem;
+    font-weight: 600;
+    padding: 9px 24px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 6px rgba(25, 90, 141, 0.2);
+}
+
+.btn-salvar-dados:hover:not(:disabled) {
+    background-color: #144670;
+}
+
+.btn-salvar-dados:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}

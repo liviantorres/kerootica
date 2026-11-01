@@ -33,7 +33,7 @@ def buscar_cliente(cliente_id):
     return ClienteController.buscar(cliente_id)
 
 
-@cliente_bp.route("/<int:cliente_id>", methods=["PATCH"])
+@cliente_bp.route("/<int:cliente_id>", methods=["PATCH", "PUT"])
 @jwt_required()
 def atualizar_cliente(cliente_id):
     return ClienteController.atualizar(cliente_id)
@@ -43,4 +43,3 @@ def atualizar_cliente(cliente_id):
 @jwt_required()
 def deletar_cliente(cliente_id):
     return ClienteController.deletar(cliente_id)
-

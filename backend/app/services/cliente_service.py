@@ -24,13 +24,17 @@ class ClienteService:
             numero_ficha=dados["numero_ficha"],
             nome_completo=dados["nome_completo"],
             cpf=dados["cpf"],
+            rg=dados.get("rg"),
+            data_nascimento=dados.get("data_nascimento"),
             telefone1=dados.get("telefone1"),
             telefone2=dados.get("telefone2"),
+            email=dados.get("email"),
             nome_mae=dados.get("nome_mae"),
             nome_pai=dados.get("nome_pai"),
+            endereco=dados.get("endereco"),
             referencia=dados.get("referencia"),
-            email=dados.get("email"),
-            endereco=dados.get("endereco")
+            cn=bool(dados.get("cn", False)),
+            ca=bool(dados.get("ca", False))
         )
 
         return ClienteRepository.salvar(cliente)
@@ -80,13 +84,17 @@ class ClienteService:
             "numero_ficha", 
             "nome_completo", 
             "cpf", 
+            "rg",
+            "data_nascimento",
             "telefone1", 
             "telefone2", 
+            "email",
             "nome_mae", 
             "nome_pai", 
-            "referencia", 
-            "email", 
-            "endereco"
+            "endereco",
+            "referencia",
+            "cn",
+            "ca"
         ]
 
         for campo in campos_atualizaveis:

@@ -30,6 +30,12 @@ parameters:
           description: "O CPF do cliente. Deve conter exatamente 11 dígitos numéricos."
           minLength: 11
           maxLength: 14  
+        rg:
+          type: string
+          example: "20001234567"
+        data_nascimento:
+          type: string
+          example: "14/08/2004"
         numero_ficha:
           type: string
           example: "1050"
@@ -39,21 +45,27 @@ parameters:
         telefone2:
           type: string
           example: "(88) 98888-5678"
+        email:
+          type: string
+          example: "maria@email.com"
         nome_mae:
           type: string
           example: "Ana Maria"
         nome_pai:
           type: string
           example: "José Carlos"
-        referencia:
-          type: string
-          example: "Casa amarela próximo ao mercadinho"
-        email:
-          type: string
-          example: "maria@email.com"
         endereco:
           type: string
           example: "Rua Principal, 123 - Centro"
+        referencia:
+          type: string
+          example: "Casa amarela próximo ao mercadinho"
+        cn:
+          type: boolean
+          example: false
+        ca:
+          type: boolean
+          example: false
 responses:
   201:
     description: Cliente criado com sucesso
